@@ -118,7 +118,7 @@ def display_itinerary():
     with st.form("add_step"):
         col1, col2 = st.columns(2)
         with col1:
-            date_step = st.date_input("Date", value=date.today())
+            date_step = st.date_input("Date", value=date(2026, 4, 18))
         with col2:
             city = st.text_input("Ville / Lieu")
         activities = st.text_area("Activités prévues")
