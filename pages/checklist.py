@@ -197,42 +197,32 @@ def display_checklist():
             item_icon, item_label = labels.get(item, ("📝", item))
             is_completed = checklist[item]
             
-            # Style de la carte selon l'état
-            if is_completed:
-                card_bg = "linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)"
-                border_color = "rgba(16, 185, 129, 0.3)"
-                text_color = "#10b981"
-                checkbox_style = "✅"
-            else:
-                card_bg = "#334155"
-                border_color = "#475569"
-                text_color = "#cbd5e1"
-                checkbox_style = "⭕"
-            
             with cols[col_idx]:
-                # Carte interactive avec checkbox intégrée
-                if st.checkbox(
+                # Bouton stylisé pour chaque tâche
+                if st.button(
                     f"{item_icon} {item_label}",
-                    value=is_completed,
-                    key=f"check_{item}",
-                    label_visibility="collapsed"
+                    key=f"btn_{item}",
+                    use_container_width=True,
+                    type="primary" if is_completed else "secondary"
                 ):
-                    checklist[item] = True
-                else:
-                    checklist[item] = False
+                    # Inverser l'état
+                    checklist[item] = not is_completed
+                    sync_state()
+                    st.rerun()
                 
-                # Affichage de la carte stylisée
-                st.markdown(f"""
-                <div style="background: {card_bg}; border: 1px solid {border_color}; border-radius: 12px; padding: 1rem; margin: 0.5rem 0; transition: all 0.3s ease; cursor: pointer;" onclick="document.querySelector('#check_{item}').click()">
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <div style="display: flex; align-items: center; flex: 1;">
-                            <span style="font-size: 1.2rem; margin-right: 0.5rem;">{item_icon}</span>
-                            <span style="color: {text_color}; font-size: 0.9rem;">{item_label}</span>
-                        </div>
-                        <span style="font-size: 1.2rem; color: {text_color};">{checkbox_style}</span>
+                # Affichage de l'état actuel
+                if is_completed:
+                    st.markdown(f"""
+                    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 0.5rem; margin: 0.25rem 0; text-align: center;">
+                        <span style="color: #10b981; font-weight: bold;">✅ Complété</span>
                     </div>
-                </div>
-                """, unsafe_allow_html=True)
+                    """, unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""
+                    <div style="background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 8px; padding: 0.5rem; margin: 0.25rem 0; text-align: center;">
+                        <span style="color: #94a3b8;">⭕ En attente</span>
+                    </div>
+                    """, unsafe_allow_html=True)
         
         # Espacement entre les groupes
         st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
