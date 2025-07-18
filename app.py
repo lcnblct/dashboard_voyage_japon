@@ -143,6 +143,95 @@ def get_default_travel_profile():
         "important_advice": "Transport, Budget détaillé, Savoir-vivre, Réservations, Alternatives, Lexique japonais"
     }
 
+def get_default_itinerary():
+    """Retourne un itinéraire par défaut basé sur le profil de voyage"""
+    return [
+        {
+            "date": "2026-04-19",
+            "city": "Tokyo",
+            "activities": "Arrivée à l'aéroport de Narita/Haneda. Transfert vers Tokyo. Installation à l'hôtel. Première découverte : Shibuya Crossing et quartier Shibuya. Dîner dans un Izakaya local.",
+            "lodging": "Hôtel à Shibuya ou Shinjuku"
+        },
+        {
+            "date": "2026-04-20",
+            "city": "Tokyo",
+            "activities": "Matin : Musée national de Tokyo. Après-midi : Asakusa (Senso-ji), Tokyo Skytree. Soirée : Akihabara pour la pop culture et les jeux vidéo.",
+            "lodging": "Hôtel à Shibuya ou Shinjuku"
+        },
+        {
+            "date": "2026-04-21",
+            "city": "Tokyo",
+            "activities": "Matin : Musée Ghibli (réservation obligatoire). Après-midi : Harajuku et Takeshita Street. Soirée : Karaoké dans le quartier.",
+            "lodging": "Hôtel à Shibuya ou Shinjuku"
+        },
+        {
+            "date": "2026-04-22",
+            "city": "Tokyo",
+            "activities": "Matin : TeamLab Planets (art numérique). Après-midi : Odaiba et Rainbow Bridge. Soirée : Shinjuku Golden Gai pour les bars typiques.",
+            "lodging": "Hôtel à Shibuya ou Shinjuku"
+        },
+        {
+            "date": "2026-04-23",
+            "city": "Hakone",
+            "activities": "Départ pour Hakone en train. Randonnée sur le sentier Hakone. Visite des onsen (bains thermaux). Nuit dans un ryokan avec onsen privé.",
+            "lodging": "Ryokan avec onsen à Hakone"
+        },
+        {
+            "date": "2026-04-24",
+            "city": "Hakone",
+            "activities": "Matin : Croisière sur le lac Ashi, vue sur le Mont Fuji. Après-midi : Musée en plein air de Hakone. Retour à Tokyo en soirée.",
+            "lodging": "Hôtel à Tokyo"
+        },
+        {
+            "date": "2026-04-25",
+            "city": "Tokyo",
+            "activities": "Matin : Mont Takao (randonnée facile avec vue sur Tokyo). Après-midi : Roppongi Hills et Mori Art Museum. Soirée : Quartier de Roppongi.",
+            "lodging": "Hôtel à Tokyo"
+        },
+        {
+            "date": "2026-04-26",
+            "city": "Kyoto",
+            "activities": "Départ pour Kyoto en Shinkansen. Installation. Après-midi : Fushimi Inari (moins de monde en fin de journée). Soirée : Gion pour apercevoir des geishas.",
+            "lodging": "Hôtel à Kyoto (centre-ville)"
+        },
+        {
+            "date": "2026-04-27",
+            "city": "Kyoto",
+            "activities": "Matin : Arashiyama (bambouseraie, pont Togetsukyo). Après-midi : Ryoan-ji (jardin zen), Kinkaku-ji (pavillon d'or). Soirée : Pontocho pour dîner.",
+            "lodging": "Hôtel à Kyoto (centre-ville)"
+        },
+        {
+            "date": "2026-04-28",
+            "city": "Kyoto",
+            "activities": "Matin : Sentier du philosophe, temples Ginkaku-ji et Nanzen-ji. Après-midi : Musée national de Kyoto. Soirée : Nijo-jo (château) illuminé.",
+            "lodging": "Hôtel à Kyoto (centre-ville)"
+        },
+        {
+            "date": "2026-04-29",
+            "city": "Osaka",
+            "activities": "Départ pour Osaka. Matin : Château d'Osaka. Après-midi : Dotonbori (quartier animé), street food. Soirée : Umeda Sky Building.",
+            "lodging": "Hôtel à Osaka (Namba ou Umeda)"
+        },
+        {
+            "date": "2026-04-30",
+            "city": "Osaka",
+            "activities": "Matin : Aquarium d'Osaka. Après-midi : Shinsekai, Tsutenkaku. Soirée : Kuromon Market pour les spécialités culinaires.",
+            "lodging": "Hôtel à Osaka (Namba ou Umeda)"
+        },
+        {
+            "date": "2026-05-01",
+            "city": "Tokyo",
+            "activities": "Retour à Tokyo en Shinkansen. Dernières courses, souvenirs. Soirée : Tournoi de Sumo (si disponible) ou quartier de Ginza.",
+            "lodging": "Hôtel près de l'aéroport"
+        },
+        {
+            "date": "2026-05-02",
+            "city": "Tokyo",
+            "activities": "Transfert vers l'aéroport. Départ pour la France.",
+            "lodging": "Vol retour"
+        }
+    ]
+
 def migrate_checklist(old_checklist):
     """Migre l'ancienne checklist vers le nouveau format"""
     new_checklist = get_default_checklist()
@@ -371,6 +460,17 @@ def display_home():
 def display_itinerary():
     st.header("🗺️ Gestion de l'itinéraire")
     data = st.session_state.data
+    
+    # Bouton pour générer l'itinéraire par défaut
+    if not data.get("itinerary"):
+        st.info("💡 Vous n'avez pas encore d'itinéraire. Cliquez sur le bouton ci-dessous pour générer un itinéraire par défaut basé sur votre profil de voyage !")
+        
+        if st.button("🚀 Générer l'itinéraire par défaut", type="primary"):
+            data["itinerary"] = get_default_itinerary()
+            data["departure_date"] = "2026-04-19"  # Date de départ du profil
+            sync_state()
+            st.success("Itinéraire par défaut généré ! Il est basé sur votre profil de voyage et inclut : Tokyo, Hakone, Kyoto, Osaka.")
+            st.rerun()
     
     # Liste des villes japonaises populaires
     japanese_cities = [
