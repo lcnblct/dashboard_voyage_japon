@@ -53,6 +53,31 @@ if "initialized" not in st.session_state:
 def sync_state():
     save_data(st.session_state.data)
 
+# --- Protection par mot de passe ---
+def check_password():
+    def password_entered():
+        if st.session_state["password"] == st.secrets["PASSWORD"]:
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]  # Efface le mot de passe de la session
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        st.text_input(
+            "Mot de passe", type="password", on_change=password_entered, key="password"
+        )
+        if "password_correct" in st.session_state and not st.session_state["password_correct"]:
+            st.error("Mot de passe incorrect")
+        st.stop()
+    elif not st.session_state["password_correct"]:
+        st.text_input(
+            "Mot de passe", type="password", on_change=password_entered, key="password"
+        )
+        st.error("Mot de passe incorrect")
+        st.stop()
+
+check_password()
+
 # --- Fonctions d'affichage des sections ---
 def display_home():
     st.title("Tableau de Bord pour votre voyage au Japon 🇯🇵")
