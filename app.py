@@ -289,7 +289,7 @@ def display_map():
         return
     
     # Debug: afficher les villes de l'itinéraire
-    st.write("**Villes dans l'itinéraire :**", [step["city"] for step in itinerary])
+    # st.write("**Villes dans l'itinéraire :**", [step["city"] for step in itinerary])
     
     # Récupérer les villes uniques
     cities = {}
