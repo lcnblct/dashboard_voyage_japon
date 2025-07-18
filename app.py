@@ -68,6 +68,81 @@ def get_default_checklist():
         "guide_phrase": False
     }
 
+def get_default_travel_profile():
+    """Retourne le profil de voyage par défaut basé sur le questionnaire"""
+    return {
+        # Informations de base
+        "travelers": "Deux frères, 28 et 30 ans, français",
+        "arrival_date": "2026-04-19",
+        "departure_date": "2026-05-02",
+        "experience": "Première fois",
+        "budget_per_day": 150,  # € par personne
+        "current_reservations": "Aucune",
+        "constraints": "Aucune contrainte particulière",
+        
+        # Préférences géographiques
+        "geographic_orientation": "Route d'Or classique (Tokyo-Kyoto-Osaka) + Alpes Japonaises",
+        "priority_1": "Ambiance urbaine, néons et vie nocturne",
+        "importance_cliches": 3,  # 1-5 échelle
+        
+        # Rythme et style
+        "travel_rhythm": 4,  # 1-5 échelle
+        "planning_preference": 4,  # 1-5 échelle
+        "morning_evening": 3,  # 1-5 échelle
+        "crowd_tolerance": 3,  # 1-5 échelle
+        "golden_week_strategy": "Mix : voir les grands sites avec des stratégies pour éviter les pics",
+        "local_interaction": 2,  # 1-5 échelle
+        "city_transport": "Prêt à marcher beaucoup pour s'imprégner des quartiers",
+        "special_needs": "Non",
+        
+        # Hébergement
+        "accommodation_style": "Mix : Auberges + 1 ou 2 nuits de luxe",
+        "ryokan_interest": 1,  # 1-5 échelle
+        "onsen_importance": 4,  # 1-5 échelle
+        "tattoos": "Non, aucun tatouage",
+        "hotel_location": "En plein cœur de l'action (bruyant mais pratique)",
+        "jr_pass_strategy": "JSP, conseillez-moi la meilleure stratégie globale",
+        "long_distance": "Shinkansen prioritairement, pour l'expérience et le confort",
+        "internet_need": "Connexion permanente indispensable",
+        
+        # Nourriture
+        "cuisine_preferences": "Sushi/Sashimi, Ramen/Udon, Street food (Takoyaki...)",
+        "restaurant_adventure": 5,  # 1-5 échelle
+        "local_drinks": 1,  # 1-5 échelle
+        "sweet_breaks": 1,  # 1-5 échelle
+        
+        # Culture et histoire
+        "temples_interest": 2,  # 1-5 échelle
+        "castles_interest": 1,  # 1-5 échelle
+        "museums_interest": 5,  # 1-5 échelle
+        "ww2_history": "Je préfère éviter les visites à forte charge émotionnelle",
+        "traditional_workshops": 1,  # 1-5 échelle
+        
+        # Pop culture et vie urbaine
+        "manga_anime": 3,  # 1-5 échelle
+        "gaming": 3,  # 1-5 échelle
+        "nightlife": "Karaoké entre amis, Petits bars conviviaux (Izakaya), Ruelles typiques",
+        "modern_architecture": 5,  # 1-5 échelle
+        "unusual_experiences": 3,  # 1-5 échelle
+        "contemporary_art": 1,  # 1-5 échelle
+        
+        # Nature et extérieur
+        "nature_importance": 3,  # 1-5 échelle
+        "hiking_interest": 5,  # 1-5 échelle
+        "japanese_gardens": 4,  # 1-5 échelle
+        "coastal_landscapes": 2,  # 1-5 échelle
+        
+        # Shopping et spécificités
+        "shopping": "Pas de shopping prévu",
+        "photography": 1,  # 1-5 échelle
+        "specific_interests": "Aller voir un combat de Sumo",
+        "activities_to_avoid": "Rien",
+        
+        # Format et attentes
+        "detail_level": "Une liste d'activités pour le matin/après-midi/soir",
+        "important_advice": "Transport, Budget détaillé, Savoir-vivre, Réservations, Alternatives, Lexique japonais"
+    }
+
 def migrate_checklist(old_checklist):
     """Migre l'ancienne checklist vers le nouveau format"""
     new_checklist = get_default_checklist()
@@ -85,7 +160,8 @@ def load_data():
             "departure_date": None,
             "itinerary": [],
             "budget": [],
-            "checklist": get_default_checklist()
+            "checklist": get_default_checklist(),
+            "travel_profile": get_default_travel_profile()
         }
         with open(DATA_FILE, "w") as f:
             json.dump(data, f)
@@ -101,9 +177,13 @@ def load_data():
             # Vérifie si la migration est nécessaire
             if len(old_checklist) < len(new_checklist):
                 data["checklist"] = migrate_checklist(old_checklist)
-                # Sauvegarde les données migrées
-                with open(DATA_FILE, "w") as f:
-                    json.dump(data, f, indent=2, ensure_ascii=False)
+        
+        # Ajout du profil de voyage si absent
+        if "travel_profile" not in data:
+            data["travel_profile"] = get_default_travel_profile()
+            # Sauvegarde les données migrées
+            with open(DATA_FILE, "w") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
     
     return data
 
@@ -115,6 +195,8 @@ def export_data():
     """Exporte les données au format JSON pour sauvegarde"""
     data = st.session_state.data
     return json.dumps(data, indent=2, ensure_ascii=False)
+
+
 
 # --- Initialisation de session_state ---
 if "initialized" not in st.session_state:
@@ -153,19 +235,83 @@ check_password()
 def display_home():
     st.title("Tableau de Bord pour votre voyage au Japon 🇯🇵")
     data = st.session_state.data
-    # Date de départ
-    dep_date = data.get("departure_date")
-    if dep_date:
-        dep_date_obj = datetime.strptime(dep_date, "%Y-%m-%d").date()
-        days_left = (dep_date_obj - date.today()).days
-        st.metric("Jours restants avant le départ", f"{days_left} jours" if days_left >= 0 else "Départ passé")
+    
+    # Affichage du profil de voyage
+    profile = data.get("travel_profile", get_default_travel_profile())
+    
+    # Métriques principales
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        # Date de départ
+        dep_date = data.get("departure_date") or profile.get("arrival_date")
+        if dep_date:
+            dep_date_obj = datetime.strptime(dep_date, "%Y-%m-%d").date()
+            days_left = (dep_date_obj - date.today()).days
+            st.metric("Jours restants avant le départ", f"{days_left} jours" if days_left >= 0 else "Départ passé")
+        else:
+            st.info("Veuillez renseigner la date de départ dans l'itinéraire.")
+    
+    with col2:
+        # Budget
+        total = sum([b["amount"] for b in data.get("budget", [])])
+        budget_per_day = profile.get("budget_per_day", 150)
+        st.metric("Budget total dépensé", f"{total:.2f} €")
+        st.caption(f"Budget cible : {budget_per_day}€/jour")
+    
+    with col3:
+        # Progression checklist
+        checklist = data.get("checklist", {})
+        total_items = len(checklist)
+        completed_items = sum(checklist.values())
+        progress_percentage = (completed_items / total_items) * 100 if total_items > 0 else 0
+        st.metric("Progression checklist", f"{completed_items}/{total_items} ({progress_percentage:.1f}%)")
+    
+    # Résumé du profil de voyage
+    st.subheader("👥 Votre Profil de Voyage")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.info(f"**Voyageurs :** {profile.get('travelers', 'Non défini')}")
+        st.info(f"**Expérience :** {profile.get('experience', 'Non défini')}")
+        st.info(f"**Priorité N°1 :** {profile.get('priority_1', 'Non définie')}")
+    
+    with col2:
+        st.info(f"**Rythme :** {profile.get('travel_rhythm', 3)}/5 (1=très cool, 5=très intense)")
+        st.info(f"**Tolérance foule :** {profile.get('crowd_tolerance', 3)}/5 (1=je fuis, 5=ça me stimule)")
+        st.info(f"**Intérêt musées :** {profile.get('museums_interest', 3)}/5")
+    
+    # Recommandations rapides basées sur le profil
+    st.subheader("🎯 Recommandations Rapides")
+    
+    recommendations = []
+    
+    if profile.get("museums_interest", 3) >= 4:
+        recommendations.append("🏛️ **Musées prioritaires** : Musée national de Tokyo, Musée Ghibli")
+    
+    if profile.get("modern_architecture", 3) >= 4:
+        recommendations.append("🏢 **Architecture moderne** : Tokyo Skytree, Shibuya Scramble")
+    
+    if profile.get("hiking_interest", 3) >= 4:
+        recommendations.append("🏔️ **Randonnées** : Mont Takao, Alpes japonaises")
+    
+    if profile.get("onsen_importance", 3) >= 4:
+        recommendations.append("♨️ **Onsen** : Hakone, Kusatsu")
+    
+    if "Sumo" in profile.get("specific_interests", ""):
+        recommendations.append("🤼 **Sumo** : Réservation obligatoire pour les tournois")
+    
+    if profile.get("travel_rhythm", 3) >= 4:
+        recommendations.append("⚡ **Rythme intense** : Planifier 2-3 activités par jour")
+    
+    # Affichage des recommandations
+    if recommendations:
+        for rec in recommendations[:3]:  # Limiter à 3 recommandations principales
+            st.info(rec)
     else:
-        st.info("Veuillez renseigner la date de départ dans l'itinéraire.")
-    # Budget
-    total = sum([b["amount"] for b in data.get("budget", [])])
-    st.metric("Budget total dépensé", f"{total:.2f} €")
-    # Prochaine tâche
-    checklist = data.get("checklist", {})
+        st.info("Complétez votre profil de voyage pour recevoir des recommandations personnalisées !")
+    
+    # Prochaine tâche prioritaire
     checklist_labels = [
         # Documents essentiels
         ("passeport_valide", "Passeport valide (6 mois après retour)"),
@@ -216,19 +362,10 @@ def display_home():
         ("guide_phrase", "Guide de phrases japonaises")
     ]
     
-    # Calcul du pourcentage de progression
-    total_items = len(checklist)
-    completed_items = sum(checklist.values())
-    progress_percentage = (completed_items / total_items) * 100 if total_items > 0 else 0
-    
-    # Affichage de la progression
-    st.metric("Progression checklist", f"{completed_items}/{total_items} ({progress_percentage:.1f}%)")
-    
-    # Prochaine tâche prioritaire
     next_task = next((label for key, label in checklist_labels if not checklist.get(key)), None)
     if next_task:
         st.warning(f"🎯 Prochaine tâche à faire : {next_task}")
-    else:
+    elif completed_items == total_items and total_items > 0:
         st.success("🎊 Toutes les tâches de la checklist sont complétées !")
 
 def display_itinerary():
@@ -529,12 +666,175 @@ def display_map():
     
     st_folium(m, width=700, height=500)
 
+def display_travel_profile():
+    st.header("👥 Profil de Voyage Personnalisé")
+    data = st.session_state.data
+    profile = data.get("travel_profile", get_default_travel_profile())
+    
+    # Informations de base
+    st.subheader("📋 Informations de Base")
+    col1, col2 = st.columns(2)
+    with col1:
+        profile["travelers"] = st.text_input("Voyageurs", value=profile["travelers"])
+        profile["arrival_date"] = st.date_input("Date d'arrivée", value=datetime.strptime(profile["arrival_date"], "%Y-%m-%d").date()).strftime("%Y-%m-%d")
+        profile["experience"] = st.selectbox("Expérience au Japon", ["Première fois", "Déjà visité", "Expérimenté"], index=0 if profile["experience"] == "Première fois" else 1)
+    with col2:
+        profile["budget_per_day"] = st.number_input("Budget par jour (€)", min_value=50, max_value=500, value=profile["budget_per_day"])
+        profile["current_reservations"] = st.text_input("Réservations actuelles", value=profile["current_reservations"])
+        profile["constraints"] = st.text_input("Contraintes spécifiques", value=profile["constraints"])
+    
+    # Préférences géographiques
+    st.subheader("🗺️ Préférences Géographiques")
+    col1, col2 = st.columns(2)
+    with col1:
+        profile["geographic_orientation"] = st.text_input("Orientation géographique", value=profile["geographic_orientation"])
+        profile["priority_1"] = st.text_input("Priorité N°1 du voyage", value=profile["priority_1"])
+    with col2:
+        profile["importance_cliches"] = st.slider("Importance des symboles 'clichés'", 1, 5, profile["importance_cliches"])
+    
+    # Rythme et style
+    st.subheader("⚡ Rythme et Style de Voyage")
+    col1, col2 = st.columns(2)
+    with col1:
+        profile["travel_rhythm"] = st.slider("Rythme général (1=très cool, 5=très intense)", 1, 5, profile["travel_rhythm"])
+        profile["planning_preference"] = st.slider("Préférence planning (1=100% impro, 5=tout planifié)", 1, 5, profile["planning_preference"])
+        profile["morning_evening"] = st.slider("Matin ou soir (1=oiseau de nuit, 5=lève-tôt)", 1, 5, profile["morning_evening"])
+    with col2:
+        profile["crowd_tolerance"] = st.slider("Tolérance à la foule (1=je fuis, 5=ça me stimule)", 1, 5, profile["crowd_tolerance"])
+        profile["local_interaction"] = st.slider("Interaction avec locaux (1=observateur, 5=prêt à engager)", 1, 5, profile["local_interaction"])
+        profile["city_transport"] = st.text_input("Déplacements en ville", value=profile["city_transport"])
+    
+    profile["golden_week_strategy"] = st.text_input("Stratégie Golden Week", value=profile["golden_week_strategy"])
+    
+    # Hébergement
+    st.subheader("🏨 Hébergement")
+    col1, col2 = st.columns(2)
+    with col1:
+        profile["accommodation_style"] = st.text_input("Style d'hébergement", value=profile["accommodation_style"])
+        profile["ryokan_interest"] = st.slider("Intérêt Ryokan (1=pas intéressé, 5=incontournable)", 1, 5, profile["ryokan_interest"])
+        profile["onsen_importance"] = st.slider("Importance onsen (1=pas important, 5=critère essentiel)", 1, 5, profile["onsen_importance"])
+    with col2:
+        profile["tattoos"] = st.selectbox("Tatouages", ["Non", "Oui"], index=0 if "Non" in profile["tattoos"] else 1)
+        profile["hotel_location"] = st.text_input("Emplacement hôtel", value=profile["hotel_location"])
+        profile["jr_pass_strategy"] = st.text_input("Stratégie JR Pass", value=profile["jr_pass_strategy"])
+    
+    profile["long_distance"] = st.text_input("Voyages longue distance", value=profile["long_distance"])
+    profile["internet_need"] = st.text_input("Besoin Internet", value=profile["internet_need"])
+    
+    # Nourriture
+    st.subheader("🍜 Nourriture et Boissons")
+    col1, col2 = st.columns(2)
+    with col1:
+        profile["cuisine_preferences"] = st.text_input("Préférences cuisine", value=profile["cuisine_preferences"])
+        profile["restaurant_adventure"] = st.slider("Aventure restaurants (1=menu anglais, 5=aventure totale)", 1, 5, profile["restaurant_adventure"])
+    with col2:
+        profile["local_drinks"] = st.slider("Intérêt boissons locales (1=pas intéressé, 5=très curieux)", 1, 5, profile["local_drinks"])
+        profile["sweet_breaks"] = st.slider("Importance pauses sucrées (1=pas mon truc, 5=priorité)", 1, 5, profile["sweet_breaks"])
+    
+    # Centres d'intérêt
+    st.subheader("🎯 Centres d'Intérêt")
+    
+    # Culture et histoire
+    st.markdown("**Culture & Histoire**")
+    col1, col2 = st.columns(2)
+    with col1:
+        profile["temples_interest"] = st.slider("Temples et sanctuaires (1=juste majeurs, 5=le plus possible)", 1, 5, profile["temples_interest"])
+        profile["castles_interest"] = st.slider("Châteaux samouraïs (1=pas priorité, 5=incontournable)", 1, 5, profile["castles_interest"])
+        profile["museums_interest"] = st.slider("Musées (1=préfère dehors, 5=passionné)", 1, 5, profile["museums_interest"])
+    with col2:
+        profile["ww2_history"] = st.text_input("Histoire XXe siècle", value=profile["ww2_history"])
+        profile["traditional_workshops"] = st.slider("Ateliers traditionnels (1=observer, 5=essayer)", 1, 5, profile["traditional_workshops"])
+    
+    # Pop culture et vie urbaine
+    st.markdown("**Pop Culture & Vie Urbaine**")
+    col1, col2 = st.columns(2)
+    with col1:
+        profile["manga_anime"] = st.slider("Manga/Anime (1=aucun, 5=otaku confirmé)", 1, 5, profile["manga_anime"])
+        profile["gaming"] = st.slider("Jeux vidéo (1=pas du tout, 5=à fond)", 1, 5, profile["gaming"])
+        profile["modern_architecture"] = st.slider("Architecture moderne (1=préfère ancien, 5=j'adore)", 1, 5, profile["modern_architecture"])
+    with col2:
+        profile["nightlife"] = st.text_input("Vie nocturne", value=profile["nightlife"])
+        profile["unusual_experiences"] = st.slider("Expériences insolites (1=très peu, 5=on est là pour ça)", 1, 5, profile["unusual_experiences"])
+        profile["contemporary_art"] = st.slider("Art contemporain (1=pas du tout, 5=priorité)", 1, 5, profile["contemporary_art"])
+    
+    # Nature et extérieur
+    st.markdown("**Nature & Extérieur**")
+    col1, col2 = st.columns(2)
+    with col1:
+        profile["nature_importance"] = st.slider("Importance nature (1=focus villes, 5=essentiel)", 1, 5, profile["nature_importance"])
+        profile["hiking_interest"] = st.slider("Randonnée (1=non merci, 5=on est sportifs)", 1, 5, profile["hiking_interest"])
+    with col2:
+        profile["japanese_gardens"] = st.slider("Jardins japonais (1=pas spécialement, 5=j'adore)", 1, 5, profile["japanese_gardens"])
+        profile["coastal_landscapes"] = st.slider("Paysages côtiers (1=pas priorité, 5=j'adore la mer)", 1, 5, profile["coastal_landscapes"])
+    
+    # Shopping et spécificités
+    st.subheader("🛍️ Shopping et Spécificités")
+    col1, col2 = st.columns(2)
+    with col1:
+        profile["shopping"] = st.text_input("Shopping", value=profile["shopping"])
+        profile["photography"] = st.slider("Photographie (1=souvenirs, 5=passionné)", 1, 5, profile["photography"])
+    with col2:
+        profile["specific_interests"] = st.text_input("Intérêts spécifiques", value=profile["specific_interests"])
+        profile["activities_to_avoid"] = st.text_input("Activités à éviter", value=profile["activities_to_avoid"])
+    
+    # Format et attentes
+    st.subheader("📝 Format et Attentes")
+    profile["detail_level"] = st.text_input("Niveau de détail", value=profile["detail_level"])
+    profile["important_advice"] = st.text_input("Conseils importants", value=profile["important_advice"])
+    
+    # Bouton de sauvegarde
+    if st.button("💾 Sauvegarder le profil"):
+        data["travel_profile"] = profile
+        sync_state()
+        st.success("Profil sauvegardé !")
+    
+    # Affichage des recommandations basées sur le profil
+    st.subheader("🎯 Recommandations Personnalisées")
+    
+    # Recommandations basées sur les scores
+    recommendations = []
+    
+    if profile["museums_interest"] >= 4:
+        recommendations.append("🏛️ **Musées prioritaires** : Musée national de Tokyo, Musée Ghibli, TeamLab Planets")
+    
+    if profile["modern_architecture"] >= 4:
+        recommendations.append("🏢 **Architecture moderne** : Tokyo Skytree, Tokyo Tower, Shibuya Scramble")
+    
+    if profile["hiking_interest"] >= 4:
+        recommendations.append("🏔️ **Randonnées** : Sentier Nakasendo, Mont Takao, Alpes japonaises")
+    
+    if profile["japanese_gardens"] >= 4:
+        recommendations.append("🌸 **Jardins** : Kenroku-en (Kanazawa), Ryoan-ji (Kyoto), Shinjuku Gyoen")
+    
+    if profile["restaurant_adventure"] >= 4:
+        recommendations.append("🍣 **Restaurants aventure** : Izakaya locaux, restaurants sans menu anglais, street food")
+    
+    if profile["onsen_importance"] >= 4:
+        recommendations.append("♨️ **Onsen** : Hakone, Kusatsu, Beppu")
+    
+    if "Sumo" in profile["specific_interests"]:
+        recommendations.append("🤼 **Sumo** : Réservation obligatoire pour les tournois (Tokyo, Osaka, Nagoya)")
+    
+    if profile["nightlife"] and "Karaoké" in profile["nightlife"]:
+        recommendations.append("🎤 **Karaoké** : Big Echo, Karaoke Kan, ou karaoké privé")
+    
+    if profile["travel_rhythm"] >= 4:
+        recommendations.append("⚡ **Rythme intense** : Planifier 2-3 activités par jour, prévoir des pauses")
+    
+    if profile["crowd_tolerance"] <= 2:
+        recommendations.append("👥 **Éviter la foule** : Visiter tôt le matin ou en soirée, éviter les weekends")
+    
+    # Affichage des recommandations
+    for rec in recommendations:
+        st.info(rec)
+
 def display_resources():
     st.header("🔗 Ressources Utiles")
     
     # Section de sauvegarde
     st.subheader("💾 Sauvegarde des données")
     st.info("⚠️ Exportez régulièrement vos données pour éviter toute perte !")
+    
     if st.button("📥 Exporter les données (JSON)"):
         data_json = export_data()
         st.download_button(
@@ -556,7 +856,7 @@ def display_resources():
 - Excusez-moi : すみません (Sumimasen)
 - Oui : はい (Hai)
 - Non : いいえ (Iie)
-- Où sont les toilettes ? : トイレはどこですか？ (Toire wa doko desu ka?)
+- Où sont les toilettes ? : トイREはどこですか？ (Toire wa doko desu ka?)
     """)
     st.subheader("Liens importants")
     st.markdown("""
@@ -569,6 +869,7 @@ def display_resources():
 # --- Navigation principale ---
 menu = [
     "Accueil",
+    "Profil de Voyage",
     "Itinéraire",
     "Budget",
     "Checklist",
@@ -579,6 +880,8 @@ choix = st.sidebar.radio("Navigation", menu, format_func=lambda x: x)
 
 if choix == "Accueil":
     display_home()
+elif choix == "Profil de Voyage":
+    display_travel_profile()
 elif choix == "Itinéraire":
     display_itinerary()
 elif choix == "Budget":

@@ -1,173 +1,161 @@
-# 🗾 Dashboard Voyage Japon
+# 🗾 Dashboard de Voyage au Japon
 
-Un tableau de bord interactif et complet pour organiser et suivre votre voyage au Japon. Cette application Streamlit vous permet de gérer votre itinéraire, votre budget, votre checklist de préparation et bien plus encore !
+Un tableau de bord interactif et personnalisé pour organiser votre voyage au Japon, avec un profil de voyage détaillé basé sur vos préférences.
 
 ## ✨ Fonctionnalités
 
-### 🏠 **Page d'accueil**
-- Compteur de jours avant le départ
-- Vue d'ensemble du budget total
-- Prochaine tâche à accomplir dans la checklist
-- Statut global de préparation
+### 📊 Tableau de Bord Principal
+- **Compteur de jours** avant le départ
+- **Suivi du budget** avec objectif quotidien
+- **Progression de la checklist** de préparation
+- **Recommandations personnalisées** basées sur votre profil
 
-### 🗺️ **Gestion de l'itinéraire**
-- Ajout d'étapes avec date, ville, activités et hébergement
-- Affichage chronologique de l'itinéraire
-- Suppression d'étapes
-- Définition automatique de la date de départ
+### 👥 Profil de Voyage Personnalisé
+- **Questionnaire complet** avec 50+ questions sur vos préférences
+- **Scores personnalisés** (1-5) pour chaque centre d'intérêt
+- **Recommandations adaptées** selon votre profil
+- **Sauvegarde automatique** de vos préférences
 
-### 💴 **Suivi de budget**
-- Enregistrement des dépenses par catégorie
-- Visualisation des dépenses totales
-- Graphiques par catégorie (Transport, Hébergement, Nourriture, etc.)
-- Calcul automatique du total
+### 🗺️ Gestion de l'Itinéraire
+- **Ajout d'étapes** avec dates, villes et activités
+- **Carte interactive** avec marqueurs géolocalisés
+- **Liste des villes japonaises** populaires
+- **Suppression et modification** des étapes
 
-### ✅ **Checklist de préparation**
-- Documents essentiels (passeport, billets, JR Pass, permis)
-- Bagages (adaptateur, vêtements, trousse de secours)
-- Administratif (banque, assurance)
-- Sauvegarde automatique des progrès
+### 💰 Suivi de Budget
+- **Ajout de dépenses** par catégorie
+- **Visualisation graphique** des dépenses
+- **Calcul automatique** du total
+- **Comparaison** avec le budget cible
 
-### 🗾 **Carte interactive**
-- Visualisation de l'itinéraire sur une carte du Japon
-- Marqueurs pour chaque ville visitée
-- Popups avec détails des activités par date
-- Support pour les principales villes japonaises
+### ✅ Checklist de Préparation
+- **40+ éléments** organisés par catégories
+- **Progression visuelle** avec pourcentage
+- **Sauvegarde automatique** des coches
+- **Migration automatique** des anciennes données
 
-### 🔗 **Ressources utiles**
-- Convertisseur EUR → JPY
-- Phrases japonaises essentielles
-- Liens vers sites officiels (ambassade, JR Pass, etc.)
+### 🗾 Carte Interactive
+- **Visualisation** de votre itinéraire
+- **Marqueurs** pour chaque ville visitée
+- **Popups informatifs** avec détails des étapes
+- **Support** de 45+ villes japonaises
 
-## 🚀 Installation et démarrage
+
+
+## 🚀 Installation et Utilisation
 
 ### Prérequis
-- Python 3.7 ou supérieur
-- pip (gestionnaire de paquets Python)
-
-### Installation
-
-1. **Cloner le repository**
-   ```bash
-   git clone https://github.com/votre-username/dashboard_voyage_japon.git
-   cd dashboard_voyage_japon
-   ```
-
-2. **Installer les dépendances**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configuration du mot de passe**
-   
-   Créez un fichier `.streamlit/secrets.toml` à la racine du projet :
-   ```toml
-   PASSWORD = "votre_mot_de_passe_ici"
-   ```
-
-4. **Lancer l'application**
-   ```bash
-   streamlit run app.py
-   ```
-
-5. **Accéder à l'application**
-   
-   Ouvrez votre navigateur et allez sur `http://localhost:8501`
-
-## 📁 Structure du projet
-
-```
-dashboard_voyage_japon/
-├── app.py              # Application principale Streamlit
-├── data.json           # Données persistantes (créé automatiquement)
-├── requirements.txt    # Dépendances Python
-├── README.md          # Ce fichier
-└── .streamlit/
-    └── secrets.toml   # Configuration du mot de passe
+```bash
+pip install -r requirements.txt
 ```
 
-## 🔧 Configuration
-
-### Variables d'environnement
-
-L'application utilise Streamlit Secrets pour la sécurité. Créez le fichier `.streamlit/secrets.toml` :
-
-```toml
-PASSWORD = "votre_mot_de_passe_secret"
+### Lancement
+```bash
+streamlit run app.py
 ```
 
-### Personnalisation
+### Configuration
+1. **Mot de passe** : Configurez `st.secrets["PASSWORD"]` dans votre fichier `.streamlit/secrets.toml`
+2. **Première utilisation** : Complétez votre profil de voyage dans la section "Profil de Voyage"
+3. **Données** : Toutes vos informations sont sauvegardées dans `data.json`
 
-Vous pouvez facilement personnaliser l'application en modifiant :
+## 📋 Structure des Données
 
-- **Villes supportées** : Ajoutez des coordonnées dans la fonction `get_city_coords()`
-- **Taux de change** : Modifiez la valeur dans `display_resources()`
-- **Checklist** : Ajoutez ou supprimez des éléments dans `load_data()`
+### Profil de Voyage
+Le profil contient 50+ champs organisés en catégories :
+- **Informations de base** : voyageurs, dates, budget
+- **Préférences géographiques** : orientation, priorités
+- **Rythme et style** : intensité, planification, tolérance foule
+- **Hébergement** : style, onsen, emplacement
+- **Nourriture** : préférences, niveau d'aventure
+- **Centres d'intérêt** : culture, pop culture, nature
+- **Spécificités** : intérêts particuliers, activités à éviter
 
-## 💾 Persistance des données
+### Recommandations Personnalisées
+Le système génère automatiquement des recommandations basées sur vos scores :
+- **Musées** (score ≥ 4) : Musée national de Tokyo, Musée Ghibli
+- **Architecture moderne** (score ≥ 4) : Tokyo Skytree, Shibuya Scramble
+- **Randonnée** (score ≥ 4) : Mont Takao, Alpes japonaises
+- **Jardins** (score ≥ 4) : Kenroku-en, Ryoan-ji
+- **Onsen** (score ≥ 4) : Hakone, Kusatsu
+- **Sumo** : Réservations pour les tournois
+- **Karaoké** : Bars et salles privées
 
-Toutes les données sont automatiquement sauvegardées dans le fichier `data.json` :
-- Itinéraire complet
-- Dépenses et budget
-- État de la checklist
-- Date de départ
 
-## 🛡️ Sécurité
 
-- **Protection par mot de passe** : L'application nécessite un mot de passe pour y accéder
-- **Données locales** : Toutes les données restent sur votre machine
-- **Aucune connexion externe** : L'application fonctionne entièrement en local
+## 🎯 Profil Type : Deux Frères Urbains
 
-## 🎯 Utilisation
+Basé sur votre questionnaire, voici votre profil type :
 
-### Première utilisation
-1. Lancez l'application avec `streamlit run app.py`
-2. Entrez le mot de passe configuré
-3. Commencez par ajouter votre date de départ dans la section "Itinéraire"
-4. Remplissez progressivement votre checklist de préparation
+### Points Forts
+- **Musées** : Passion absolue (5/5)
+- **Architecture moderne** : Intérêt maximal (5/5)
+- **Randonnée** : Sportifs et motivés (5/5)
+- **Cuisine aventureuse** : Prêts pour l'aventure totale (5/5)
+- **Onsen** : Critère essentiel (4/5)
+- **Vie nocturne** : Priorité N°1
 
-### Gestion quotidienne
-- **Itinéraire** : Ajoutez vos étapes au fur et à mesure de votre planification
-- **Budget** : Enregistrez vos dépenses pour suivre vos finances
-- **Checklist** : Cochez les éléments au fur et à mesure de votre préparation
-- **Carte** : Visualisez votre parcours sur une carte interactive
+### Itinéraire Recommandé
+- **Tokyo** (5 nuits) : Découverte urbaine et vie nocturne
+- **Hakone** (2 nuits) : Onsen et vue sur le Mont Fuji
+- **Kyoto** (4 nuits) : Culture traditionnelle et jardins
+- **Osaka** (3 nuits) : Street food et ambiance locale
 
-## 🔧 Dépendances
+### Activités Prioritaires
+- **Musées** : Musée national de Tokyo, Musée Ghibli, TeamLab
+- **Architecture** : Tokyo Skytree, Shibuya Scramble, Umeda Sky Building
+- **Randonnées** : Mont Takao, Sentier Nakasendo, Alpes japonaises
+- **Onsen** : Hakone, Kusatsu, Beppu
+- **Sumo** : Réservation obligatoire pour les tournois
+- **Karaoké** : Soirées entre frères
 
-- **streamlit** : Interface utilisateur web
-- **pandas** : Manipulation et analyse des données
-- **folium** : Création de cartes interactives
-- **streamlit-folium** : Intégration de Folium dans Streamlit
+## 🔧 Personnalisation
+
+### Ajout de Nouvelles Villes
+Modifiez la fonction `get_city_coords()` dans `app.py` pour ajouter de nouvelles villes avec leurs coordonnées.
+
+### Modification du Profil
+Ajoutez de nouveaux champs dans `get_default_travel_profile()` et mettez à jour la fonction `display_travel_profile()`.
+
+
+
+## 📱 Applications Recommandées
+
+### Transport
+- **Hyperdia** : Horaires des trains
+- **Google Maps** : Navigation
+- **Japan Transit Planner** : Itinéraires détaillés
+
+### Communication
+- **Google Translate** : Traduction
+- **DeepL** : Traduction avancée
+
+### Météo
+- **Tenki.jp** : Météo japonaise
+- **Weather.com** : Prévisions internationales
+
+## 💡 Conseils d'Utilisation
+
+1. **Complétez d'abord votre profil** pour recevoir des recommandations personnalisées
+2. **Sauvegardez régulièrement** vos données via l'export JSON
+3. **Utilisez la carte interactive** pour visualiser votre itinéraire
+4. **Générez le guide LaTeX** une fois votre profil finalisé
+5. **Consultez les recommandations** sur la page d'accueil
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
+Ce projet est conçu pour être facilement personnalisable. N'hésitez pas à :
+- Ajouter de nouvelles fonctionnalités
+- Améliorer les recommandations
+- Étendre la liste des villes
+- Personnaliser le guide LaTeX
 
-1. Fork le projet
-2. Créer une branche pour votre fonctionnalité
-3. Commiter vos changements
-4. Pousser vers la branche
-5. Ouvrir une Pull Request
+## 📄 Licence
 
-## 📝 Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
-## 🆘 Support
-
-Si vous rencontrez des problèmes ou avez des questions :
-
-1. Vérifiez que toutes les dépendances sont installées
-2. Assurez-vous que le fichier `secrets.toml` est correctement configuré
-3. Consultez les logs de Streamlit pour les erreurs
-4. Ouvrez une issue sur GitHub
-
-## 🎉 Remerciements
-
-- [Streamlit](https://streamlit.io/) pour l'interface utilisateur
-- [Folium](https://python-visualization.github.io/folium/) pour les cartes interactives
-- [Pandas](https://pandas.pydata.org/) pour la manipulation des données
+Ce projet est open source et disponible sous licence MIT.
 
 ---
 
-**Bon voyage au Japon ! 🇯🇵✨**
+**Bon voyage au Japon ! 🇯🇵**
+
+*Votre assistant IA personnel pour un voyage parfaitement personnalisé.*
