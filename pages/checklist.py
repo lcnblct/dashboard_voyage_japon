@@ -210,6 +210,18 @@ def display_checklist():
                 checkbox_style = "⭕"
             
             with cols[col_idx]:
+                # Carte interactive avec checkbox intégrée
+                if st.checkbox(
+                    f"{item_icon} {item_label}",
+                    value=is_completed,
+                    key=f"check_{item}",
+                    label_visibility="collapsed"
+                ):
+                    checklist[item] = True
+                else:
+                    checklist[item] = False
+                
+                # Affichage de la carte stylisée
                 st.markdown(f"""
                 <div style="background: {card_bg}; border: 1px solid {border_color}; border-radius: 12px; padding: 1rem; margin: 0.5rem 0; transition: all 0.3s ease; cursor: pointer;" onclick="document.querySelector('#check_{item}').click()">
                     <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -221,12 +233,6 @@ def display_checklist():
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
-                
-                # Checkbox cachée pour la fonctionnalité
-                if st.checkbox("", value=is_completed, key=f"check_{item}", label_visibility="collapsed"):
-                    checklist[item] = True
-                else:
-                    checklist[item] = False
         
         # Espacement entre les groupes
         st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
