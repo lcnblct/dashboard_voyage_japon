@@ -1,1 +1,16 @@
-{"departure_date": null, "itinerary": [], "budget": [], "checklist": {"passeport_valide": false, "billet_avion": false, "jr_pass": false, "permis_conduire": false, "adaptateur": false, "vetements": false, "trousse_secours": false, "banque": false, "assurance": false}}
+{
+  "departure_date": null,
+  "itinerary": [],
+  "budget": [],
+  "checklist": {
+    "passeport_valide": true,
+    "billet_avion": false,
+    "jr_pass": false,
+    "permis_conduire": false,
+    "adaptateur": false,
+    "vetements": false,
+    "trousse_secours": false,
+    "banque": false,
+    "assurance": false
+  }
+}
