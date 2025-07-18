@@ -141,7 +141,7 @@ def display_itinerary():
                 data["departure_date"] = str(date_step)
             sync_state()
             st.success("Étape ajoutée !")
-            st.experimental_rerun()
+            st.rerun()
     # Affichage de l'itinéraire
     if data["itinerary"]:
         st.subheader("Votre itinéraire")
@@ -154,7 +154,7 @@ def display_itinerary():
                 if st.button(f"Supprimer cette étape", key=f"del_{idx}"):
                     data["itinerary"].pop(idx)
                     sync_state()
-                    st.experimental_rerun()
+                    st.rerun()
     else:
         st.info("Aucune étape d'itinéraire pour l'instant.")
 
@@ -177,7 +177,7 @@ def display_budget():
             })
             sync_state()
             st.success("Dépense ajoutée !")
-            st.experimental_rerun()
+            st.rerun()
     # Affichage des dépenses
     if data["budget"]:
         st.subheader("Dépenses enregistrées")
