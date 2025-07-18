@@ -263,6 +263,19 @@ def display_map():
 
 def display_resources():
     st.header("🔗 Ressources Utiles")
+    
+    # Section de sauvegarde
+    st.subheader("💾 Sauvegarde des données")
+    st.info("⚠️ Exportez régulièrement vos données pour éviter toute perte !")
+    if st.button("📥 Exporter les données (JSON)"):
+        data_json = export_data()
+        st.download_button(
+            label="💾 Télécharger data.json",
+            data=data_json,
+            file_name=f"voyage_japon_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+            mime="application/json"
+        )
+    
     st.subheader("Convertisseur EUR → JPY")
     taux = 165  # Taux fixe, à ajuster ou automatiser
     eur = st.number_input("Montant en EUR", min_value=0.0, step=1.0, key="eur_input")
