@@ -3,7 +3,7 @@
   "itinerary": [],
   "budget": [],
   "checklist": {
-    "passeport_valide": true,
+    "passeport_valide": false,
     "billet_avion": false,
     "jr_pass": false,
     "permis_conduire": false,

@@ -45,6 +45,11 @@ def save_data(data):
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
+def export_data():
+    """Exporte les données au format JSON pour sauvegarde"""
+    data = st.session_state.data
+    return json.dumps(data, indent=2, ensure_ascii=False)
+
 # --- Initialisation de session_state ---
 if "initialized" not in st.session_state:
     st.session_state.data = load_data()
