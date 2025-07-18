@@ -13,6 +13,164 @@ from datetime import datetime, date
 import folium
 from streamlit_folium import st_folium
 
+# Configuration du thème sombre
+st.set_page_config(
+    page_title="Dashboard Voyage Japon",
+    page_icon="🇯🇵",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': None,
+        'Report a bug': None,
+        'About': "Dashboard de préparation de voyage au Japon 🇯🇵"
+    }
+)
+
+# Configuration du thème sombre
+st.markdown("""
+<style>
+    /* Configuration du thème sombre */
+    .stApp {
+        background-color: #0e1117;
+        color: #fafafa;
+    }
+    
+    /* Sidebar sombre */
+    .css-1d391kg {
+        background-color: #262730;
+    }
+    
+    /* Titres */
+    h1, h2, h3, h4, h5, h6 {
+        color: #fafafa !important;
+    }
+    
+    /* Texte */
+    p, div, span {
+        color: #fafafa !important;
+    }
+    
+    /* Métriques */
+    .metric-container {
+        background-color: #262730;
+        border-radius: 8px;
+        padding: 10px;
+        margin: 5px 0;
+    }
+    
+    /* Cartes et conteneurs */
+    .stAlert {
+        background-color: #262730 !important;
+        border: 1px solid #4a4a4a !important;
+    }
+    
+    /* Dataframes */
+    .dataframe {
+        background-color: #262730 !important;
+        color: #fafafa !important;
+    }
+    
+    /* Formulaires */
+    .stTextInput, .stSelectbox, .stNumberInput, .stDateInput, .stTimeInput {
+        background-color: #262730 !important;
+        color: #fafafa !important;
+    }
+    
+    /* Boutons */
+    .stButton > button {
+        background-color: #4CAF50 !important;
+        color: white !important;
+        border: none !important;
+    }
+    
+    .stButton > button:hover {
+        background-color: #45a049 !important;
+    }
+    
+    /* Sliders */
+    .stSlider {
+        background-color: #262730 !important;
+    }
+    
+    /* Checkboxes */
+    .stCheckbox {
+        background-color: #262730 !important;
+        color: #fafafa !important;
+    }
+    
+    /* Expanders */
+    .streamlit-expanderHeader {
+        background-color: #262730 !important;
+        color: #fafafa !important;
+    }
+    
+    /* Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        background-color: #262730 !important;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background-color: #262730 !important;
+        color: #fafafa !important;
+    }
+    
+    /* Progress bars */
+    .stProgress > div > div > div > div {
+        background-color: #4CAF50 !important;
+    }
+    
+    /* Info boxes */
+    .stInfo {
+        background-color: #1e3a8a !important;
+        border: 1px solid #3b82f6 !important;
+    }
+    
+    .stSuccess {
+        background-color: #166534 !important;
+        border: 1px solid #22c55e !important;
+    }
+    
+    .stWarning {
+        background-color: #92400e !important;
+        border: 1px solid #f59e0b !important;
+    }
+    
+    .stError {
+        background-color: #991b1b !important;
+        border: 1px solid #ef4444 !important;
+    }
+    
+    /* Calendrier personnalisé */
+    .calendar-card {
+        background-color: #262730 !important;
+        border: 2px solid #4CAF50 !important;
+        color: #fafafa !important;
+    }
+    
+    .calendar-date {
+        color: #4CAF50 !important;
+        font-weight: bold !important;
+    }
+    
+    .calendar-city {
+        color: #f97316 !important;
+        font-weight: bold !important;
+    }
+    
+    .calendar-activities {
+        background-color: #1e293b !important;
+        border-left: 4px solid #3b82f6 !important;
+        color: #fafafa !important;
+    }
+    
+    .calendar-lodging {
+        background-color: #1e293b !important;
+        border-left: 4px solid #f59e0b !important;
+        color: #fafafa !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 DATA_FILE = "data.json"
 
 # --- Fonctions utilitaires pour la persistance ---
@@ -1446,24 +1604,24 @@ def display_calendar():
             # Carte pour chaque jour
             with st.container():
                 st.markdown(f"""
-                <div style="
+                <div class="calendar-card" style="
                     border: 2px solid #4CAF50;
                     border-radius: 10px;
                     padding: 15px;
                     margin: 10px 0;
-                    background-color: #E8F5E8;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    background-color: #262730;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
                 ">
-                    <h4 style="color: #2E7D32; margin: 0; font-weight: bold;">{row['date_formatted']}</h4>
-                    <p style="color: #388E3C; margin: 5px 0; font-size: 0.9em; font-weight: 500;">{row['jour_semaine_fr']}</p>
-                    <h5 style="color: #D32F2F; margin: 10px 0; font-weight: bold;">🏙️ {row['city']}</h5>
-                    <div style="background-color: #FFFFFF; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #2196F3;">
-                        <strong style="color: #1976D2;">📋 Activités :</strong><br>
-                        <span style="color: #424242;">{row['activities'] if row['activities'] else 'Aucune activité prévue'}</span>
+                    <h4 class="calendar-date" style="color: #4CAF50; margin: 0; font-weight: bold;">{row['date_formatted']}</h4>
+                    <p style="color: #9CA3AF; margin: 5px 0; font-size: 0.9em; font-weight: 500;">{row['jour_semaine_fr']}</p>
+                    <h5 class="calendar-city" style="color: #F97316; margin: 10px 0; font-weight: bold;">🏙️ {row['city']}</h5>
+                    <div class="calendar-activities" style="background-color: #1E293B; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #3B82F6;">
+                        <strong style="color: #60A5FA;">📋 Activités :</strong><br>
+                        <span style="color: #E5E7EB;">{row['activities'] if row['activities'] else 'Aucune activité prévue'}</span>
                     </div>
-                    <div style="background-color: #FFF3E0; padding: 10px; border-radius: 5px; border-left: 4px solid #FF9800;">
-                        <strong style="color: #E65100;">🏨 Hébergement :</strong><br>
-                        <span style="color: #424242;">{row['lodging'] if row['lodging'] else 'Non défini'}</span>
+                    <div class="calendar-lodging" style="background-color: #1E293B; padding: 10px; border-radius: 5px; border-left: 4px solid #F59E0B;">
+                        <strong style="color: #FBBF24;">🏨 Hébergement :</strong><br>
+                        <span style="color: #E5E7EB;">{row['lodging'] if row['lodging'] else 'Non défini'}</span>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
