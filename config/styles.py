@@ -110,6 +110,7 @@ def apply_styles():
             overflow: hidden !important;
         }
         
+        /* Barre colorée supprimée
         .metric-container::before {
             content: '' !important;
             position: absolute !important;
@@ -119,6 +120,7 @@ def apply_styles():
             height: 3px !important;
             background: var(--gradient-primary) !important;
         }
+        */
         
         .metric-container:hover {
             transform: translateY(-2px) !important;
@@ -421,6 +423,7 @@ def apply_styles():
             box-shadow: var(--shadow-lg) !important;
         }
         
+        /* Barre colorée supprimée
         [data-testid="metric-container"]::before {
             content: '' !important;
             position: absolute !important;
@@ -430,5 +433,6 @@ def apply_styles():
             height: 3px !important;
             background: var(--gradient-primary) !important;
         }
+        */
     </style>
     """, unsafe_allow_html=True) 
