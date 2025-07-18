@@ -16,6 +16,8 @@ from utils.helpers import check_password
 # Import des pages
 from pages.home import display_home
 from pages.travel_profile import display_travel_profile
+from pages.prompt_generator import display_prompt_generator
+from pages.ai_assistant import display_ai_assistant
 from pages.itinerary import display_itinerary
 from pages.calendar import display_calendar
 from pages.flight import display_flight
@@ -50,6 +52,10 @@ if choix == "Accueil":
     display_home()
 elif choix == "Profil de Voyage":
     display_travel_profile()
+elif choix == "Prompt Ultime":
+    display_prompt_generator()
+elif choix == "Assistant IA":
+    display_ai_assistant()
 elif choix == "Itinéraire":
     display_itinerary()
 elif choix == "Calendrier":

@@ -21,6 +21,8 @@ DATA_FILE = "data.json"
 NAVIGATION_MENU = [
     "Accueil",
     "Profil de Voyage",
+    "Prompt Ultime",
+    "Assistant IA",
     "Itinéraire",
     "Calendrier",
     "Vol",
