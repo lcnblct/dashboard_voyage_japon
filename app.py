@@ -274,38 +274,38 @@ def get_default_budget_planning():
     """Retourne le budget prévisionnel par défaut basé sur le profil de voyage"""
     return {
         "transport": {
-            "flights": {"budget": 1200, "description": "Billets d'avion aller-retour"},
+            "flights": {"budget": 2000, "description": "Billets d'avion aller-retour"},
             "jr_pass": {"budget": 300, "description": "Japan Rail Pass 7 jours"},
             "local_transport": {"budget": 150, "description": "Métro, bus, taxis locaux"},
             "airport_transfer": {"budget": 80, "description": "Transferts aéroport"}
         },
         "accommodation": {
-            "hotels": {"budget": 800, "description": "Hôtels standards (12 nuits)"},
-            "ryokan": {"budget": 200, "description": "1 nuit en ryokan avec onsen"},
-            "hostels": {"budget": 300, "description": "Auberges de jeunesse"}
+            "hotels": {"budget": 900, "description": "Hôtels standards (12 nuits)"},
+            "ryokan": {"budget": 250, "description": "1 nuit en ryokan avec onsen"},
+            "hostels": {"budget": 350, "description": "Auberges de jeunesse"}
         },
         "food": {
-            "restaurants": {"budget": 400, "description": "Restaurants midi/soir"},
-            "street_food": {"budget": 150, "description": "Street food et snacks"},
-            "breakfast": {"budget": 100, "description": "Petits-déjeuners"},
-            "drinks": {"budget": 80, "description": "Boissons et cafés"}
+            "restaurants": {"budget": 450, "description": "Restaurants midi/soir"},
+            "street_food": {"budget": 180, "description": "Street food et snacks"},
+            "breakfast": {"budget": 120, "description": "Petits-déjeuners"},
+            "drinks": {"budget": 100, "description": "Boissons et cafés"}
         },
         "activities": {
-            "museums": {"budget": 60, "description": "Entrées musées et sites"},
-            "onsen": {"budget": 40, "description": "Bains thermaux"},
-            "guided_tours": {"budget": 100, "description": "Visites guidées"},
-            "experiences": {"budget": 120, "description": "Expériences culturelles"}
+            "museums": {"budget": 80, "description": "Entrées musées et sites"},
+            "onsen": {"budget": 60, "description": "Bains thermaux"},
+            "guided_tours": {"budget": 120, "description": "Visites guidées"},
+            "experiences": {"budget": 150, "description": "Expériences culturelles"}
         },
         "shopping": {
-            "souvenirs": {"budget": 100, "description": "Souvenirs et cadeaux"},
-            "clothing": {"budget": 50, "description": "Vêtements si nécessaire"},
+            "souvenirs": {"budget": 120, "description": "Souvenirs et cadeaux"},
+            "clothing": {"budget": 80, "description": "Vêtements si nécessaire"},
             "electronics": {"budget": 0, "description": "Électronique"}
         },
         "other": {
-            "insurance": {"budget": 80, "description": "Assurance voyage"},
-            "sim_card": {"budget": 30, "description": "Carte SIM/data"},
-            "emergency": {"budget": 100, "description": "Fonds d'urgence"},
-            "tips": {"budget": 20, "description": "Pourboires"}
+            "insurance": {"budget": 100, "description": "Assurance voyage"},
+            "sim_card": {"budget": 40, "description": "Carte SIM/data"},
+            "emergency": {"budget": 120, "description": "Fonds d'urgence"},
+            "tips": {"budget": 30, "description": "Pourboires"}
         }
     }
 
@@ -655,7 +655,7 @@ def display_budget():
         with col1:
             budget_planning["transport"]["flights"]["budget"] = st.slider(
                 "✈️ Billets d'avion", 
-                min_value=800, max_value=2000, value=budget_planning["transport"]["flights"]["budget"], 
+                min_value=800, max_value=2500, value=budget_planning["transport"]["flights"]["budget"], 
                 step=50,
                 help="Prix moyen pour un aller-retour France-Japon"
             )
