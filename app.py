@@ -1447,22 +1447,23 @@ def display_calendar():
             with st.container():
                 st.markdown(f"""
                 <div style="
-                    border: 2px solid #e0e0e0;
+                    border: 2px solid #4CAF50;
                     border-radius: 10px;
                     padding: 15px;
                     margin: 10px 0;
-                    background-color: #f8f9fa;
+                    background-color: #E8F5E8;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 ">
-                    <h4 style="color: #1f77b4; margin: 0;">{row['date_formatted']}</h4>
-                    <p style="color: #666; margin: 5px 0; font-size: 0.9em;">{row['jour_semaine_fr']}</p>
-                    <h5 style="color: #d62728; margin: 10px 0;">🏙️ {row['city']}</h5>
-                    <div style="background-color: white; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                        <strong>📋 Activités :</strong><br>
-                        {row['activities'] if row['activities'] else 'Aucune activité prévue'}
+                    <h4 style="color: #2E7D32; margin: 0; font-weight: bold;">{row['date_formatted']}</h4>
+                    <p style="color: #388E3C; margin: 5px 0; font-size: 0.9em; font-weight: 500;">{row['jour_semaine_fr']}</p>
+                    <h5 style="color: #D32F2F; margin: 10px 0; font-weight: bold;">🏙️ {row['city']}</h5>
+                    <div style="background-color: #FFFFFF; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 4px solid #2196F3;">
+                        <strong style="color: #1976D2;">📋 Activités :</strong><br>
+                        <span style="color: #424242;">{row['activities'] if row['activities'] else 'Aucune activité prévue'}</span>
                     </div>
-                    <div style="background-color: #e8f4fd; padding: 10px; border-radius: 5px;">
-                        <strong>🏨 Hébergement :</strong><br>
-                        {row['lodging'] if row['lodging'] else 'Non défini'}
+                    <div style="background-color: #FFF3E0; padding: 10px; border-radius: 5px; border-left: 4px solid #FF9800;">
+                        <strong style="color: #E65100;">🏨 Hébergement :</strong><br>
+                        <span style="color: #424242;">{row['lodging'] if row['lodging'] else 'Non défini'}</span>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
