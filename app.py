@@ -1402,6 +1402,112 @@ def display_flight():
     - **Transfert aéroport** : Prévoyez le transport vers Tokyo (Narita Express, Limousine Bus)
     """)
 
+def display_calendar():
+    st.header("📅 Calendrier de Voyage")
+    data = st.session_state.data
+    itinerary = data.get("itinerary", [])
+    
+    if not itinerary:
+        st.info("💡 Vous n'avez pas encore d'itinéraire. Ajoutez des étapes dans l'onglet 'Itinéraire' pour voir le calendrier !")
+        return
+    
+    # Trier l'itinéraire par date
+    sorted_itinerary = sorted(itinerary, key=lambda x: x["date"])
+    
+    # Créer un DataFrame pour l'affichage
+    df = pd.DataFrame(sorted_itinerary)
+    df["date"] = pd.to_datetime(df["date"])
+    df["jour_semaine"] = df["date"].dt.strftime("%A")
+    df["jour_semaine_fr"] = df["date"].dt.strftime("%A").map({
+        "Monday": "Lundi", "Tuesday": "Mardi", "Wednesday": "Mercredi",
+        "Thursday": "Jeudi", "Friday": "Vendredi", "Saturday": "Samedi", "Sunday": "Dimanche"
+    })
+    df["date_formatted"] = df["date"].dt.strftime("%d/%m/%Y")
+    
+    # Affichage en colonnes
+    st.subheader("🗓️ Vue Calendrier")
+    
+    # Calculer le nombre de colonnes (max 3 pour la lisibilité)
+    num_columns = min(3, len(sorted_itinerary))
+    
+    if num_columns == 1:
+        cols = [st.container()]
+    elif num_columns == 2:
+        col1, col2 = st.columns(2)
+        cols = [col1, col2]
+    else:
+        col1, col2, col3 = st.columns(3)
+        cols = [col1, col2, col3]
+    
+    # Répartir les jours dans les colonnes
+    for i, (idx, row) in enumerate(df.iterrows()):
+        col_idx = i % num_columns
+        with cols[col_idx]:
+            # Carte pour chaque jour
+            with st.container():
+                st.markdown(f"""
+                <div style="
+                    border: 2px solid #e0e0e0;
+                    border-radius: 10px;
+                    padding: 15px;
+                    margin: 10px 0;
+                    background-color: #f8f9fa;
+                ">
+                    <h4 style="color: #1f77b4; margin: 0;">{row['date_formatted']}</h4>
+                    <p style="color: #666; margin: 5px 0; font-size: 0.9em;">{row['jour_semaine_fr']}</p>
+                    <h5 style="color: #d62728; margin: 10px 0;">🏙️ {row['city']}</h5>
+                    <div style="background-color: white; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                        <strong>📋 Activités :</strong><br>
+                        {row['activities'] if row['activities'] else 'Aucune activité prévue'}
+                    </div>
+                    <div style="background-color: #e8f4fd; padding: 10px; border-radius: 5px;">
+                        <strong>🏨 Hébergement :</strong><br>
+                        {row['lodging'] if row['lodging'] else 'Non défini'}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+    
+    # Affichage en tableau pour une vue plus compacte
+    st.subheader("📊 Vue Tableau")
+    
+    # Créer un tableau stylisé
+    table_data = []
+    for idx, row in df.iterrows():
+        table_data.append({
+            "📅 Date": row["date_formatted"],
+            "📆 Jour": row["jour_semaine_fr"],
+            "🏙️ Ville": row["city"],
+            "📋 Activités": row["activities"][:100] + "..." if len(row["activities"]) > 100 else row["activities"],
+            "🏨 Hébergement": row["lodging"][:50] + "..." if len(row["lodging"]) > 50 else row["lodging"]
+        })
+    
+    table_df = pd.DataFrame(table_data)
+    st.dataframe(table_df, use_container_width=True, hide_index=True)
+    
+    # Statistiques du voyage
+    st.subheader("📈 Statistiques du Voyage")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric("📅 Durée", f"{len(sorted_itinerary)} jours")
+    
+    with col2:
+        unique_cities = len(set(step["city"] for step in sorted_itinerary))
+        st.metric("🏙️ Villes visitées", unique_cities)
+    
+    with col3:
+        start_date = sorted_itinerary[0]["date"]
+        end_date = sorted_itinerary[-1]["date"]
+        st.metric("🗓️ Période", f"{start_date} → {end_date}")
+    
+    with col4:
+        # Compter les types d'hébergement
+        accommodations = [step["lodging"] for step in sorted_itinerary if step["lodging"]]
+        hotel_count = sum(1 for acc in accommodations if "hôtel" in acc.lower() or "hotel" in acc.lower())
+        ryokan_count = sum(1 for acc in accommodations if "ryokan" in acc.lower())
+        st.metric("🏨 Types d'hébergement", f"{hotel_count} hôtels, {ryokan_count} ryokan")
+
 def display_resources():
     st.header("🔗 Ressources Utiles")
     
@@ -1504,6 +1610,7 @@ menu = [
     "Accueil",
     "Profil de Voyage",
     "Itinéraire",
+    "Calendrier",
     "Vol",
     "Budget",
     "Checklist",
@@ -1522,6 +1629,8 @@ elif choix == "Profil de Voyage":
     display_travel_profile()
 elif choix == "Itinéraire":
     display_itinerary()
+elif choix == "Calendrier":
+    display_calendar()
 elif choix == "Vol":
     display_flight()
 elif choix == "Budget":
