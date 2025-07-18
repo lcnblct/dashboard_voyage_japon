@@ -16,67 +16,95 @@ from streamlit_folium import st_folium
 DATA_FILE = "data.json"
 
 # --- Fonctions utilitaires pour la persistance ---
+def get_default_checklist():
+    """Retourne la checklist complète par défaut"""
+    return {
+        # Documents essentiels
+        "passeport_valide": False,
+        "billet_avion": False,
+        "jr_pass": False,
+        "permis_conduire": False,
+        "assurance": False,
+        "carte_credit": False,
+        "especes_yen": False,
+        
+        # Électronique
+        "adaptateur": False,
+        "chargeur_telephone": False,
+        "batterie_externe": False,
+        "appareil_photo": False,
+        "carte_sd": False,
+        
+        # Bagages
+        "valise": False,
+        "vetements": False,
+        "chaussures_confortables": False,
+        "sous_vetements": False,
+        "pyjama": False,
+        "serviette": False,
+        "produits_hygiene": False,
+        "trousse_secours": False,
+        "medicaments": False,
+        "lunettes_contact": False,
+        
+        # Préparatifs administratifs
+        "banque": False,
+        "copie_documents": False,
+        "photos_identite": False,
+        "adresse_hotel": False,
+        "itineraire_imprime": False,
+        
+        # Applications utiles
+        "app_transport": False,
+        "app_traduction": False,
+        "app_meteo": False,
+        "app_maps": False,
+        
+        # Préparatifs pratiques
+        "reservation_hotels": False,
+        "reservation_restaurants": False,
+        "activites_reservees": False,
+        "transport_aeroport": False,
+        "guide_phrase": False
+    }
+
+def migrate_checklist(old_checklist):
+    """Migre l'ancienne checklist vers le nouveau format"""
+    new_checklist = get_default_checklist()
+    
+    # Copie les valeurs existantes
+    for key in old_checklist:
+        if key in new_checklist:
+            new_checklist[key] = old_checklist[key]
+    
+    return new_checklist
+
 def load_data():
     if not os.path.exists(DATA_FILE):
         data = {
             "departure_date": None,
             "itinerary": [],
             "budget": [],
-            "checklist": {
-                # Documents essentiels
-                "passeport_valide": False,
-                "billet_avion": False,
-                "jr_pass": False,
-                "permis_conduire": False,
-                "assurance": False,
-                "carte_credit": False,
-                "especes_yen": False,
-                
-                # Électronique
-                "adaptateur": False,
-                "chargeur_telephone": False,
-                "batterie_externe": False,
-                "appareil_photo": False,
-                "carte_sd": False,
-                
-                # Bagages
-                "valise": False,
-                "vetements": False,
-                "chaussures_confortables": False,
-                "sous_vetements": False,
-                "pyjama": False,
-                "serviette": False,
-                "produits_hygiene": False,
-                "trousse_secours": False,
-                "medicaments": False,
-                "lunettes_contact": False,
-                
-                # Préparatifs administratifs
-                "banque": False,
-                "copie_documents": False,
-                "photos_identite": False,
-                "adresse_hotel": False,
-                "itineraire_imprime": False,
-                
-                # Applications utiles
-                "app_transport": False,
-                "app_traduction": False,
-                "app_meteo": False,
-                "app_maps": False,
-                
-                # Préparatifs pratiques
-                "reservation_hotels": False,
-                "reservation_restaurants": False,
-                "activites_reservees": False,
-                "transport_aeroport": False,
-                "guide_phrase": False
-            }
+            "checklist": get_default_checklist()
         }
         with open(DATA_FILE, "w") as f:
             json.dump(data, f)
     else:
         with open(DATA_FILE, "r") as f:
             data = json.load(f)
+        
+        # Migration de la checklist si nécessaire
+        if "checklist" in data:
+            old_checklist = data["checklist"]
+            new_checklist = get_default_checklist()
+            
+            # Vérifie si la migration est nécessaire
+            if len(old_checklist) < len(new_checklist):
+                data["checklist"] = migrate_checklist(old_checklist)
+                # Sauvegarde les données migrées
+                with open(DATA_FILE, "w") as f:
+                    json.dump(data, f, indent=2, ensure_ascii=False)
+    
     return data
 
 def save_data(data):
