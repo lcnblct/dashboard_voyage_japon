@@ -270,6 +270,45 @@ def get_default_flight_info():
         "special_assistance": ""
     }
 
+def get_default_budget_planning():
+    """Retourne le budget prévisionnel par défaut basé sur le profil de voyage"""
+    return {
+        "transport": {
+            "flights": {"budget": 1200, "description": "Billets d'avion aller-retour"},
+            "jr_pass": {"budget": 300, "description": "Japan Rail Pass 7 jours"},
+            "local_transport": {"budget": 150, "description": "Métro, bus, taxis locaux"},
+            "airport_transfer": {"budget": 80, "description": "Transferts aéroport"}
+        },
+        "accommodation": {
+            "hotels": {"budget": 800, "description": "Hôtels standards (12 nuits)"},
+            "ryokan": {"budget": 200, "description": "1 nuit en ryokan avec onsen"},
+            "hostels": {"budget": 300, "description": "Auberges de jeunesse"}
+        },
+        "food": {
+            "restaurants": {"budget": 400, "description": "Restaurants midi/soir"},
+            "street_food": {"budget": 150, "description": "Street food et snacks"},
+            "breakfast": {"budget": 100, "description": "Petits-déjeuners"},
+            "drinks": {"budget": 80, "description": "Boissons et cafés"}
+        },
+        "activities": {
+            "museums": {"budget": 60, "description": "Entrées musées et sites"},
+            "onsen": {"budget": 40, "description": "Bains thermaux"},
+            "guided_tours": {"budget": 100, "description": "Visites guidées"},
+            "experiences": {"budget": 120, "description": "Expériences culturelles"}
+        },
+        "shopping": {
+            "souvenirs": {"budget": 100, "description": "Souvenirs et cadeaux"},
+            "clothing": {"budget": 50, "description": "Vêtements si nécessaire"},
+            "electronics": {"budget": 0, "description": "Électronique"}
+        },
+        "other": {
+            "insurance": {"budget": 80, "description": "Assurance voyage"},
+            "sim_card": {"budget": 30, "description": "Carte SIM/data"},
+            "emergency": {"budget": 100, "description": "Fonds d'urgence"},
+            "tips": {"budget": 20, "description": "Pourboires"}
+        }
+    }
+
 def migrate_checklist(old_checklist):
     """Migre l'ancienne checklist vers le nouveau format"""
     new_checklist = get_default_checklist()
@@ -316,6 +355,13 @@ def load_data():
         # Ajout des informations de vol si absent
         if "flight_info" not in data:
             data["flight_info"] = get_default_flight_info()
+            # Sauvegarde les données migrées
+            with open(DATA_FILE, "w") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+        
+        # Ajout du budget prévisionnel si absent
+        if "budget_planning" not in data:
+            data["budget_planning"] = get_default_budget_planning()
             # Sauvegarde les données migrées
             with open(DATA_FILE, "w") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
@@ -570,35 +616,292 @@ def display_itinerary():
 def display_budget():
     st.header("💴 Suivi de Budget")
     data = st.session_state.data
-    with st.form("add_expense"):
+    
+    # Onglets pour budget prévisionnel et suivi des dépenses
+    tab1, tab2 = st.tabs(["📊 Budget Prévisionnel", "💰 Suivi des Dépenses"])
+    
+    with tab1:
+        st.subheader("🎯 Planification du Budget")
+        
+        # Récupérer le budget prévisionnel
+        budget_planning = data.get("budget_planning", get_default_budget_planning())
+        
+        # Calculer le total prévisionnel
+        total_planned = 0
+        for category in budget_planning.values():
+            for item in category.values():
+                total_planned += item["budget"]
+        
+        # Affichage du total prévisionnel
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("💰 Budget Total Prévisionnel", f"{total_planned} €")
+        with col2:
+            profile = data.get("travel_profile", get_default_travel_profile())
+            budget_per_day = profile.get("budget_per_day", 150)
+            st.metric("📅 Budget/Jour Cible", f"{budget_per_day} €")
+        with col3:
+            days = 14  # Durée par défaut
+            if data.get("itinerary"):
+                days = len(data["itinerary"])
+            st.metric("📆 Durée du Voyage", f"{days} jours")
+        
+        # Sliders pour chaque catégorie
+        st.markdown("---")
+        
+        # Transport
+        st.subheader("🚗 Transport")
         col1, col2 = st.columns(2)
         with col1:
-            description = st.text_input("Description")
-            category = st.selectbox("Catégorie", ["Transport", "Hébergement", "Nourriture", "Activités", "Shopping", "Autres"])
+            budget_planning["transport"]["flights"]["budget"] = st.slider(
+                "✈️ Billets d'avion", 
+                min_value=800, max_value=2000, value=budget_planning["transport"]["flights"]["budget"], 
+                step=50,
+                help="Prix moyen pour un aller-retour France-Japon"
+            )
+            budget_planning["transport"]["jr_pass"]["budget"] = st.slider(
+                "🚄 Japan Rail Pass", 
+                min_value=200, max_value=500, value=budget_planning["transport"]["jr_pass"]["budget"], 
+                step=25,
+                help="Prix du JR Pass selon la durée"
+            )
         with col2:
-            amount = st.number_input("Montant (en €)", min_value=0.0, step=0.5)
-        submitted = st.form_submit_button("Ajouter la dépense")
-        if submitted and description and amount > 0:
-            data["budget"].append({
-                "description": description,
-                "amount": float(amount),
-                "category": category
-            })
+            budget_planning["transport"]["local_transport"]["budget"] = st.slider(
+                "🚇 Transport local", 
+                min_value=50, max_value=300, value=budget_planning["transport"]["local_transport"]["budget"], 
+                step=10,
+                help="Métro, bus, taxis dans les villes"
+            )
+            budget_planning["transport"]["airport_transfer"]["budget"] = st.slider(
+                "🚌 Transferts aéroport", 
+                min_value=30, max_value=150, value=budget_planning["transport"]["airport_transfer"]["budget"], 
+                step=10,
+                help="Transferts vers/des aéroports"
+            )
+        
+        # Hébergement
+        st.subheader("🏨 Hébergement")
+        col1, col2 = st.columns(2)
+        with col1:
+            budget_planning["accommodation"]["hotels"]["budget"] = st.slider(
+                "🏢 Hôtels standards", 
+                min_value=400, max_value=1500, value=budget_planning["accommodation"]["hotels"]["budget"], 
+                step=50,
+                help="Hôtels 3-4 étoiles"
+            )
+            budget_planning["accommodation"]["ryokan"]["budget"] = st.slider(
+                "♨️ Ryokan avec onsen", 
+                min_value=100, max_value=400, value=budget_planning["accommodation"]["ryokan"]["budget"], 
+                step=25,
+                help="Nuit en ryokan traditionnel"
+            )
+        with col2:
+            budget_planning["accommodation"]["hostels"]["budget"] = st.slider(
+                "🏠 Auberges", 
+                min_value=150, max_value=500, value=budget_planning["accommodation"]["hostels"]["budget"], 
+                step=25,
+                help="Auberges de jeunesse et guesthouses"
+            )
+        
+        # Nourriture
+        st.subheader("🍜 Nourriture")
+        col1, col2 = st.columns(2)
+        with col1:
+            budget_planning["food"]["restaurants"]["budget"] = st.slider(
+                "🍽️ Restaurants", 
+                min_value=200, max_value=800, value=budget_planning["food"]["restaurants"]["budget"], 
+                step=25,
+                help="Repas dans les restaurants"
+            )
+            budget_planning["food"]["street_food"]["budget"] = st.slider(
+                "🍡 Street food", 
+                min_value=50, max_value=300, value=budget_planning["food"]["street_food"]["budget"], 
+                step=10,
+                help="Snacks et street food"
+            )
+        with col2:
+            budget_planning["food"]["breakfast"]["budget"] = st.slider(
+                "🥐 Petits-déjeuners", 
+                min_value=50, max_value=200, value=budget_planning["food"]["breakfast"]["budget"], 
+                step=10,
+                help="Petits-déjeuners"
+            )
+            budget_planning["food"]["drinks"]["budget"] = st.slider(
+                "🥤 Boissons", 
+                min_value=30, max_value=150, value=budget_planning["food"]["drinks"]["budget"], 
+                step=10,
+                help="Cafés, thés, boissons"
+            )
+        
+        # Activités
+        st.subheader("🎯 Activités")
+        col1, col2 = st.columns(2)
+        with col1:
+            budget_planning["activities"]["museums"]["budget"] = st.slider(
+                "🏛️ Musées et sites", 
+                min_value=20, max_value=150, value=budget_planning["activities"]["museums"]["budget"], 
+                step=5,
+                help="Entrées musées et sites touristiques"
+            )
+            budget_planning["activities"]["onsen"]["budget"] = st.slider(
+                "♨️ Bains thermaux", 
+                min_value=20, max_value=100, value=budget_planning["activities"]["onsen"]["budget"], 
+                step=5,
+                help="Entrées onsen"
+            )
+        with col2:
+            budget_planning["activities"]["guided_tours"]["budget"] = st.slider(
+                "👥 Visites guidées", 
+                min_value=50, max_value=200, value=budget_planning["activities"]["guided_tours"]["budget"], 
+                step=10,
+                help="Visites guidées et tours"
+            )
+            budget_planning["activities"]["experiences"]["budget"] = st.slider(
+                "🎭 Expériences culturelles", 
+                min_value=50, max_value=200, value=budget_planning["activities"]["experiences"]["budget"], 
+                step=10,
+                help="Ateliers, cérémonies, expériences"
+            )
+        
+        # Shopping
+        st.subheader("🛍️ Shopping")
+        col1, col2 = st.columns(2)
+        with col1:
+            budget_planning["shopping"]["souvenirs"]["budget"] = st.slider(
+                "🎁 Souvenirs", 
+                min_value=50, max_value=300, value=budget_planning["shopping"]["souvenirs"]["budget"], 
+                step=10,
+                help="Souvenirs et cadeaux"
+            )
+        with col2:
+            budget_planning["shopping"]["clothing"]["budget"] = st.slider(
+                "👕 Vêtements", 
+                min_value=0, max_value=200, value=budget_planning["shopping"]["clothing"]["budget"], 
+                step=10,
+                help="Vêtements si nécessaire"
+            )
+        
+        # Autres
+        st.subheader("📋 Autres")
+        col1, col2 = st.columns(2)
+        with col1:
+            budget_planning["other"]["insurance"]["budget"] = st.slider(
+                "🛡️ Assurance voyage", 
+                min_value=50, max_value=150, value=budget_planning["other"]["insurance"]["budget"], 
+                step=5,
+                help="Assurance voyage"
+            )
+            budget_planning["other"]["sim_card"]["budget"] = st.slider(
+                "📱 Carte SIM/Data", 
+                min_value=20, max_value=80, value=budget_planning["other"]["sim_card"]["budget"], 
+                step=5,
+                help="Carte SIM ou data roaming"
+            )
+        with col2:
+            budget_planning["other"]["emergency"]["budget"] = st.slider(
+                "🚨 Fonds d'urgence", 
+                min_value=50, max_value=200, value=budget_planning["other"]["emergency"]["budget"], 
+                step=10,
+                help="Fonds de sécurité"
+            )
+            budget_planning["other"]["tips"]["budget"] = st.slider(
+                "💡 Pourboires", 
+                min_value=10, max_value=50, value=budget_planning["other"]["tips"]["budget"], 
+                step=5,
+                help="Pourboires (optionnel au Japon)"
+            )
+        
+        # Recalculer le total
+        new_total_planned = 0
+        for category in budget_planning.values():
+            for item in category.values():
+                new_total_planned += item["budget"]
+        
+        # Affichage du résumé
+        st.markdown("---")
+        st.subheader("📊 Résumé du Budget Prévisionnel")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("💰 Total Prévisionnel", f"{new_total_planned} €")
+            st.metric("📅 Budget/Jour Moyen", f"{new_total_planned/days:.0f} €")
+        with col2:
+            # Comparaison avec le budget cible
+            budget_target = budget_per_day * days
+            st.metric("🎯 Budget Cible", f"{budget_target} €")
+            difference = new_total_planned - budget_target
+            if difference > 0:
+                st.error(f"⚠️ Dépassement: +{difference} €")
+            else:
+                st.success(f"✅ Économies: {abs(difference)} €")
+        
+        # Répartition par catégorie
+        st.subheader("📈 Répartition par Catégorie")
+        categories_summary = {
+            "Transport": sum(item["budget"] for item in budget_planning["transport"].values()),
+            "Hébergement": sum(item["budget"] for item in budget_planning["accommodation"].values()),
+            "Nourriture": sum(item["budget"] for item in budget_planning["food"].values()),
+            "Activités": sum(item["budget"] for item in budget_planning["activities"].values()),
+            "Shopping": sum(item["budget"] for item in budget_planning["shopping"].values()),
+            "Autres": sum(item["budget"] for item in budget_planning["other"].values())
+        }
+        
+        # Graphique en barres
+        st.bar_chart(categories_summary)
+        
+        # Bouton de sauvegarde
+        if st.button("💾 Sauvegarder le Budget Prévisionnel", type="primary"):
+            data["budget_planning"] = budget_planning
             sync_state()
-            st.success("Dépense ajoutée !")
-            st.rerun()
-    # Affichage des dépenses
-    if data["budget"]:
-        st.subheader("Dépenses enregistrées")
-        df = pd.DataFrame(data["budget"])
-        st.dataframe(df)
-        total = df["amount"].sum()
-        st.markdown(f"**Total : {total:.2f} €**")
-        # Dépenses par catégorie
-        cat_sum = df.groupby("category")["amount"].sum()
-        st.bar_chart(cat_sum)
-    else:
-        st.info("Aucune dépense enregistrée.")
+            st.success("Budget prévisionnel sauvegardé !")
+    
+    with tab2:
+        st.subheader("💰 Suivi des Dépenses Réelles")
+        
+        # Formulaire d'ajout de dépense
+        with st.form("add_expense"):
+            col1, col2 = st.columns(2)
+            with col1:
+                description = st.text_input("Description de la dépense")
+                category = st.selectbox("Catégorie", ["Transport", "Hébergement", "Nourriture", "Activités", "Shopping", "Autres"])
+            with col2:
+                amount = st.number_input("Montant (en €)", min_value=0.0, step=0.5)
+            submitted = st.form_submit_button("Ajouter la dépense")
+            if submitted and description and amount > 0:
+                data["budget"].append({
+                    "description": description,
+                    "amount": float(amount),
+                    "category": category
+                })
+                sync_state()
+                st.success("Dépense ajoutée !")
+                st.rerun()
+        
+        # Affichage des dépenses
+        if data["budget"]:
+            st.subheader("Dépenses enregistrées")
+            df = pd.DataFrame(data["budget"])
+            st.dataframe(df)
+            total_spent = df["amount"].sum()
+            st.markdown(f"**Total dépensé : {total_spent:.2f} €**")
+            
+            # Comparaison avec le budget prévisionnel
+            if "budget_planning" in data:
+                total_planned = sum(
+                    sum(item["budget"] for item in category.values())
+                    for category in data["budget_planning"].values()
+                )
+                remaining = total_planned - total_spent
+                if remaining > 0:
+                    st.success(f"💰 Budget restant : {remaining:.2f} €")
+                else:
+                    st.error(f"⚠️ Dépassement : {abs(remaining):.2f} €")
+            
+            # Dépenses par catégorie
+            cat_sum = df.groupby("category")["amount"].sum()
+            st.bar_chart(cat_sum)
+        else:
+            st.info("Aucune dépense enregistrée pour le moment.")
 
 def display_checklist():
     st.header("✅ Checklist de Préparation")
@@ -1102,19 +1405,6 @@ def display_flight():
 def display_resources():
     st.header("🔗 Ressources Utiles")
     
-    # Section de sauvegarde
-    st.subheader("💾 Sauvegarde des données")
-    st.info("⚠️ Exportez régulièrement vos données pour éviter toute perte !")
-    
-    if st.button("📥 Exporter les données (JSON)"):
-        data_json = export_data()
-        st.download_button(
-            label="💾 Télécharger data.json",
-            data=data_json,
-            file_name=f"data_{datetime.now().strftime('%Y%m%d')}.json",
-            mime="application/json"
-        )
-    
     st.subheader("Convertisseur EUR → JPY")
     taux = 165  # Taux fixe, à ajuster ou automatiser
     eur = st.number_input("Montant en EUR", min_value=0.0, step=1.0, key="eur_input")
@@ -1137,6 +1427,78 @@ def display_resources():
 - [JR East](https://www.jreast.co.jp/e/)
     """)
 
+def display_settings():
+    st.header("⚙️ Réglages")
+    
+    # Onglets pour les réglages
+    tab1, tab2 = st.tabs(["💾 Sauvegarde", "🔄 Reset"])
+    
+    with tab1:
+        st.subheader("💾 Sauvegarde des données")
+        st.info("⚠️ Exportez régulièrement vos données pour éviter toute perte !")
+        
+        if st.button("📥 Exporter les données (JSON)", type="primary"):
+            data_json = export_data()
+            st.download_button(
+                label="💾 Télécharger data.json",
+                data=data_json,
+                file_name=f"data_{datetime.now().strftime('%Y%m%d')}.json",
+                mime="application/json"
+            )
+        
+        # Section d'import (optionnel pour le futur)
+        st.subheader("📤 Import de données")
+        st.info("Fonctionnalité d'import à venir...")
+    
+    with tab2:
+        st.subheader("🔄 Reset de l'application")
+        st.warning("⚠️ Cette action supprimera définitivement toutes vos données !")
+        
+        # Formulaire de confirmation avec mot de passe
+        with st.form("reset_confirmation"):
+            reset_password = st.text_input(
+                "Mot de passe de confirmation", 
+                type="password",
+                help="Entrez le mot de passe pour confirmer le reset"
+            )
+            reset_confirmed = st.checkbox(
+                "Je confirme vouloir supprimer toutes mes données",
+                help="Cochez cette case pour confirmer"
+            )
+            
+            submitted = st.form_submit_button("🗑️ Reset Application", type="secondary")
+            
+            if submitted:
+                if reset_password == st.secrets["PASSWORD"] and reset_confirmed:
+                    # Supprimer le fichier de données
+                    if os.path.exists(DATA_FILE):
+                        os.remove(DATA_FILE)
+                    # Réinitialiser la session
+                    st.session_state.clear()
+                    st.session_state.data = load_data()
+                    st.session_state.initialized = True
+                    st.success("✅ Application remise à zéro avec succès !")
+                    st.rerun()
+                elif reset_password != st.secrets["PASSWORD"]:
+                    st.error("❌ Mot de passe incorrect")
+                elif not reset_confirmed:
+                    st.error("❌ Veuillez confirmer la suppression")
+                else:
+                    st.error("❌ Erreur lors du reset")
+        
+        # Informations sur le reset
+        st.info("""
+        **Ce que fait le reset :**
+        - Supprime toutes vos données sauvegardées
+        - Remet l'application à son état initial
+        - Génère un nouveau profil de voyage par défaut
+        - Efface l'itinéraire, le budget et la checklist
+        
+        **Ce qui n'est PAS affecté :**
+        - Vos fichiers locaux
+        - Vos exports précédents
+        """)
+
 # --- Navigation principale ---
 menu = [
     "Accueil",
@@ -1146,22 +1508,10 @@ menu = [
     "Budget",
     "Checklist",
     "Carte",
-    "Ressources"
+    "Ressources",
+    "Réglages"
 ]
 choix = st.sidebar.radio("Navigation", menu, format_func=lambda x: x)
-
-# Bouton de reset dans la sidebar
-st.sidebar.markdown("---")
-if st.sidebar.button("🔄 Reset Application (Mode Défaut)", type="secondary"):
-    # Supprimer le fichier de données pour forcer la réinitialisation
-    if os.path.exists(DATA_FILE):
-        os.remove(DATA_FILE)
-    # Réinitialiser la session
-    st.session_state.clear()
-    st.session_state.data = load_data()
-    st.session_state.initialized = True
-    st.success("Application remise à zéro !")
-    st.rerun()
 
 st.sidebar.markdown("---")
 st.sidebar.info("🇯🇵 Application de préparation de voyage au Japon — par votre assistant IA")
@@ -1181,4 +1531,6 @@ elif choix == "Checklist":
 elif choix == "Carte":
     display_map()
 elif choix == "Ressources":
-    display_resources() 
+    display_resources()
+elif choix == "Réglages":
+    display_settings() 
