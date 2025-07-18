@@ -11,10 +11,24 @@ Un tableau de bord interactif et personnalisé pour organiser votre voyage au Ja
 - **Recommandations personnalisées** basées sur votre profil
 
 ### 👥 Profil de Voyage Personnalisé
-- **Questionnaire complet** avec 50+ questions sur vos préférences
+- **Questionnaire interactif** avec 50+ questions sur vos préférences
 - **Scores personnalisés** (1-5) pour chaque centre d'intérêt
 - **Recommandations adaptées** selon votre profil
 - **Sauvegarde automatique** de vos préférences
+
+### 🤖 Assistant IA avec Capacités Web
+- **Chat intelligent** avec l'IA Groq (modèle compound-beta)
+- **Recherche web en temps réel** pour horaires, prix, avis
+- **Conseils personnalisés** basés sur votre profil
+- **Suggestions rapides** pour questions fréquentes
+- **Export de conversations** en format texte
+
+### 🎯 Générateur de Prompt Ultime
+- **Prompt structuré** pour guides de voyage personnalisés
+- **Personnalisation complète** du niveau de détail et du ton
+- **Intégration du profil** avec toutes les préférences
+- **Téléchargement** du prompt en format texte
+- **Utilisation avec ChatGPT, Claude** ou autres IA
 
 ### 🗺️ Gestion de l'Itinéraire
 - **Ajout d'étapes** avec dates, villes et activités
