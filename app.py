@@ -220,17 +220,55 @@ def get_default_itinerary():
         },
         {
             "date": "2026-05-01",
-            "city": "Tokyo",
-            "activities": "Retour à Tokyo en Shinkansen. Dernières courses, souvenirs. Soirée : Tournoi de Sumo (si disponible) ou quartier de Ginza.",
-            "lodging": "Hôtel près de l'aéroport"
+            "city": "Osaka",
+            "activities": "Dernière journée à Osaka. Matin : Shopping et dernières courses. Après-midi : Visite du quartier de Tennoji et Abeno Harukas. Soirée : Dernier dîner dans un restaurant local.",
+            "lodging": "Hôtel à Osaka (près de l'aéroport KIX)"
         },
         {
             "date": "2026-05-02",
-            "city": "Tokyo",
-            "activities": "Transfert vers l'aéroport. Départ pour la France.",
+            "city": "Osaka",
+            "activities": "Transfert vers l'aéroport Kansai (KIX). Départ pour la France.",
             "lodging": "Vol retour"
         }
     ]
+
+def get_default_flight_info():
+    """Retourne les informations de vol par défaut"""
+    return {
+        "outbound": {
+            "airline": "",
+            "flight_number": "",
+            "departure_airport": "CDG",
+            "arrival_airport": "NRT",
+            "departure_date": "2026-04-19",
+            "departure_time": "10:00",
+            "arrival_time": "07:00",
+            "terminal_departure": "",
+            "terminal_arrival": "",
+            "booking_reference": "",
+            "checked_in": False,
+            "boarding_pass": False
+        },
+        "return": {
+            "airline": "",
+            "flight_number": "",
+            "departure_airport": "KIX",
+            "arrival_airport": "CDG",
+            "departure_date": "2026-05-02",
+            "departure_time": "11:00",
+            "arrival_time": "16:00",
+            "terminal_departure": "",
+            "terminal_arrival": "",
+            "booking_reference": "",
+            "checked_in": False,
+            "boarding_pass": False
+        },
+        "notes": "",
+        "baggage_allowance": "",
+        "seat_selection": False,
+        "meal_preference": "",
+        "special_assistance": ""
+    }
 
 def migrate_checklist(old_checklist):
     """Migre l'ancienne checklist vers le nouveau format"""
@@ -250,7 +288,8 @@ def load_data():
             "itinerary": [],
             "budget": [],
             "checklist": get_default_checklist(),
-            "travel_profile": get_default_travel_profile()
+            "travel_profile": get_default_travel_profile(),
+            "flight_info": get_default_flight_info()
         }
         with open(DATA_FILE, "w") as f:
             json.dump(data, f)
@@ -270,6 +309,13 @@ def load_data():
         # Ajout du profil de voyage si absent
         if "travel_profile" not in data:
             data["travel_profile"] = get_default_travel_profile()
+            # Sauvegarde les données migrées
+            with open(DATA_FILE, "w") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+        
+        # Ajout des informations de vol si absent
+        if "flight_info" not in data:
+            data["flight_info"] = get_default_flight_info()
             # Sauvegarde les données migrées
             with open(DATA_FILE, "w") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
@@ -939,6 +985,120 @@ def display_travel_profile():
     for rec in recommendations:
         st.info(rec)
 
+def display_flight():
+    st.header("✈️ Informations de Vol")
+    data = st.session_state.data
+    flight_info = data.get("flight_info", get_default_flight_info())
+    
+    # Onglets pour aller et retour
+    tab1, tab2, tab3 = st.tabs(["🛫 Vol Aller", "🛬 Vol Retour", "📋 Détails Généraux"])
+    
+    with tab1:
+        st.subheader("Vol Aller")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            flight_info["outbound"]["airline"] = st.text_input("Compagnie aérienne", value=flight_info["outbound"]["airline"], key="outbound_airline")
+            flight_info["outbound"]["flight_number"] = st.text_input("Numéro de vol", value=flight_info["outbound"]["flight_number"], key="outbound_flight")
+            flight_info["outbound"]["departure_airport"] = st.text_input("Aéroport de départ", value=flight_info["outbound"]["departure_airport"], key="outbound_dep")
+            flight_info["outbound"]["arrival_airport"] = st.text_input("Aéroport d'arrivée", value=flight_info["outbound"]["arrival_airport"], key="outbound_arr")
+            flight_info["outbound"]["departure_date"] = st.date_input("Date de départ", value=datetime.strptime(flight_info["outbound"]["departure_date"], "%Y-%m-%d").date(), key="outbound_date").strftime("%Y-%m-%d")
+        
+        with col2:
+            flight_info["outbound"]["departure_time"] = st.time_input("Heure de départ", value=datetime.strptime(flight_info["outbound"]["departure_time"], "%H:%M").time(), key="outbound_dep_time").strftime("%H:%M")
+            flight_info["outbound"]["arrival_time"] = st.time_input("Heure d'arrivée", value=datetime.strptime(flight_info["outbound"]["arrival_time"], "%H:%M").time(), key="outbound_arr_time").strftime("%H:%M")
+            flight_info["outbound"]["terminal_departure"] = st.text_input("Terminal de départ", value=flight_info["outbound"]["terminal_departure"], key="outbound_term_dep")
+            flight_info["outbound"]["terminal_arrival"] = st.text_input("Terminal d'arrivée", value=flight_info["outbound"]["terminal_arrival"], key="outbound_term_arr")
+            flight_info["outbound"]["booking_reference"] = st.text_input("Référence de réservation", value=flight_info["outbound"]["booking_reference"], key="outbound_ref")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            flight_info["outbound"]["checked_in"] = st.checkbox("Check-in effectué", value=flight_info["outbound"]["checked_in"], key="outbound_checkin")
+        with col2:
+            flight_info["outbound"]["boarding_pass"] = st.checkbox("Carte d'embarquement", value=flight_info["outbound"]["boarding_pass"], key="outbound_boarding")
+    
+    with tab2:
+        st.subheader("Vol Retour")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            flight_info["return"]["airline"] = st.text_input("Compagnie aérienne", value=flight_info["return"]["airline"], key="return_airline")
+            flight_info["return"]["flight_number"] = st.text_input("Numéro de vol", value=flight_info["return"]["flight_number"], key="return_flight")
+            flight_info["return"]["departure_airport"] = st.text_input("Aéroport de départ", value=flight_info["return"]["departure_airport"], key="return_dep")
+            flight_info["return"]["arrival_airport"] = st.text_input("Aéroport d'arrivée", value=flight_info["return"]["arrival_airport"], key="return_arr")
+            flight_info["return"]["departure_date"] = st.date_input("Date de départ", value=datetime.strptime(flight_info["return"]["departure_date"], "%Y-%m-%d").date(), key="return_date").strftime("%Y-%m-%d")
+        
+        with col2:
+            flight_info["return"]["departure_time"] = st.time_input("Heure de départ", value=datetime.strptime(flight_info["return"]["departure_time"], "%H:%M").time(), key="return_dep_time").strftime("%H:%M")
+            flight_info["return"]["arrival_time"] = st.time_input("Heure d'arrivée", value=datetime.strptime(flight_info["return"]["arrival_time"], "%H:%M").time(), key="return_arr_time").strftime("%H:%M")
+            flight_info["return"]["terminal_departure"] = st.text_input("Terminal de départ", value=flight_info["return"]["terminal_departure"], key="return_term_dep")
+            flight_info["return"]["terminal_arrival"] = st.text_input("Terminal d'arrivée", value=flight_info["return"]["terminal_arrival"], key="return_term_arr")
+            flight_info["return"]["booking_reference"] = st.text_input("Référence de réservation", value=flight_info["return"]["booking_reference"], key="return_ref")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            flight_info["return"]["checked_in"] = st.checkbox("Check-in effectué", value=flight_info["return"]["checked_in"], key="return_checkin")
+        with col2:
+            flight_info["return"]["boarding_pass"] = st.checkbox("Carte d'embarquement", value=flight_info["return"]["boarding_pass"], key="return_boarding")
+    
+    with tab3:
+        st.subheader("Détails Généraux")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            flight_info["baggage_allowance"] = st.text_input("Franchise bagages", value=flight_info["baggage_allowance"], placeholder="ex: 23kg + bagage à main")
+            flight_info["meal_preference"] = st.selectbox("Préférence repas", ["", "Standard", "Végétarien", "Halal", "Kosher", "Sans gluten"], index=0 if not flight_info["meal_preference"] else ["Standard", "Végétarien", "Halal", "Kosher", "Sans gluten"].index(flight_info["meal_preference"]) + 1)
+        
+        with col2:
+            flight_info["seat_selection"] = st.checkbox("Sélection de siège effectuée", value=flight_info["seat_selection"])
+            flight_info["special_assistance"] = st.text_input("Assistance spéciale", value=flight_info["special_assistance"], placeholder="ex: Chaise roulante, assistance visuelle")
+        
+        flight_info["notes"] = st.text_area("Notes importantes", value=flight_info["notes"], placeholder="Informations importantes sur les vols, contacts d'urgence, etc.")
+    
+    # Bouton de sauvegarde
+    if st.button("💾 Sauvegarder les informations de vol"):
+        data["flight_info"] = flight_info
+        sync_state()
+        st.success("Informations de vol sauvegardées !")
+    
+    # Affichage du résumé
+    st.subheader("📋 Résumé des Vols")
+    
+    if flight_info["outbound"]["airline"] or flight_info["return"]["airline"]:
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if flight_info["outbound"]["airline"]:
+                st.info(f"**🛫 Aller :** {flight_info['outbound']['airline']} {flight_info['outbound']['flight_number']}")
+                st.caption(f"📅 {flight_info['outbound']['departure_date']} à {flight_info['outbound']['departure_time']}")
+                st.caption(f"🛬 {flight_info['outbound']['arrival_airport']} à {flight_info['outbound']['arrival_time']}")
+                if flight_info["outbound"]["checked_in"]:
+                    st.success("✅ Check-in effectué")
+                if flight_info["outbound"]["boarding_pass"]:
+                    st.success("✅ Carte d'embarquement")
+        
+        with col2:
+            if flight_info["return"]["airline"]:
+                st.info(f"**🛬 Retour :** {flight_info['return']['airline']} {flight_info['return']['flight_number']}")
+                st.caption(f"📅 {flight_info['return']['departure_date']} à {flight_info['return']['departure_time']}")
+                st.caption(f"🛬 {flight_info['return']['arrival_airport']} à {flight_info['return']['arrival_time']}")
+                if flight_info["return"]["checked_in"]:
+                    st.success("✅ Check-in effectué")
+                if flight_info["return"]["boarding_pass"]:
+                    st.success("✅ Carte d'embarquement")
+    else:
+        st.info("Aucune information de vol renseignée pour le moment.")
+    
+    # Conseils utiles
+    st.subheader("💡 Conseils Utiles")
+    st.markdown("""
+    - **Check-in en ligne** : Généralement disponible 24-48h avant le vol
+    - **Bagages** : Vérifiez les dimensions et poids autorisés
+    - **Documents** : Passeport valide + visa si nécessaire
+    - **Arrivée à l'aéroport** : 2-3h avant le vol international
+    - **Transfert aéroport** : Prévoyez le transport vers Tokyo (Narita Express, Limousine Bus)
+    """)
+
 def display_resources():
     st.header("🔗 Ressources Utiles")
     
@@ -982,6 +1142,7 @@ menu = [
     "Accueil",
     "Profil de Voyage",
     "Itinéraire",
+    "Vol",
     "Budget",
     "Checklist",
     "Carte",
@@ -989,12 +1150,30 @@ menu = [
 ]
 choix = st.sidebar.radio("Navigation", menu, format_func=lambda x: x)
 
+# Bouton de reset dans la sidebar
+st.sidebar.markdown("---")
+if st.sidebar.button("🔄 Reset Application (Mode Défaut)", type="secondary"):
+    # Supprimer le fichier de données pour forcer la réinitialisation
+    if os.path.exists(DATA_FILE):
+        os.remove(DATA_FILE)
+    # Réinitialiser la session
+    st.session_state.clear()
+    st.session_state.data = load_data()
+    st.session_state.initialized = True
+    st.success("Application remise à zéro !")
+    st.rerun()
+
+st.sidebar.markdown("---")
+st.sidebar.info("🇯🇵 Application de préparation de voyage au Japon — par votre assistant IA")
+
 if choix == "Accueil":
     display_home()
 elif choix == "Profil de Voyage":
     display_travel_profile()
 elif choix == "Itinéraire":
     display_itinerary()
+elif choix == "Vol":
+    display_flight()
 elif choix == "Budget":
     display_budget()
 elif choix == "Checklist":
@@ -1002,7 +1181,4 @@ elif choix == "Checklist":
 elif choix == "Carte":
     display_map()
 elif choix == "Ressources":
-    display_resources()
-
-st.sidebar.markdown("---")
-st.sidebar.info("🇯🇵 Application de préparation de voyage au Japon — par votre assistant IA") 
+    display_resources() 
