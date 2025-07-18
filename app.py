@@ -272,7 +272,7 @@ def display_resources():
         st.download_button(
             label="💾 Télécharger data.json",
             data=data_json,
-            file_name=f"voyage_japon_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+            file_name=f"data_{datetime.now().strftime('%Y%m%d')}.json",
             mime="application/json"
         )
     
