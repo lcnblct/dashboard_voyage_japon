@@ -457,6 +457,17 @@ def display_budget():
 def display_checklist():
     st.header("✅ Checklist de Préparation")
     data = st.session_state.data
+    
+    # S'assurer que la checklist a toutes les clés nécessaires
+    default_checklist = get_default_checklist()
+    if "checklist" not in data:
+        data["checklist"] = default_checklist
+    else:
+        # Ajouter les clés manquantes
+        for key, default_value in default_checklist.items():
+            if key not in data["checklist"]:
+                data["checklist"][key] = default_value
+    
     checklist = data["checklist"]
     
     # Calcul du pourcentage de progression
@@ -471,73 +482,73 @@ def display_checklist():
     st.subheader("📄 Documents essentiels")
     col1, col2 = st.columns(2)
     with col1:
-        checklist["passeport_valide"] = st.checkbox("Passeport valide (6 mois après retour)", value=checklist["passeport_valide"])
-        checklist["billet_avion"] = st.checkbox("Billet d'avion imprimé/PDF", value=checklist["billet_avion"])
-        checklist["jr_pass"] = st.checkbox("Réservation JR Pass", value=checklist["jr_pass"])
-        checklist["permis_conduire"] = st.checkbox("Permis de conduire international", value=checklist["permis_conduire"])
+        checklist["passeport_valide"] = st.checkbox("Passeport valide (6 mois après retour)", value=checklist.get("passeport_valide", False))
+        checklist["billet_avion"] = st.checkbox("Billet d'avion imprimé/PDF", value=checklist.get("billet_avion", False))
+        checklist["jr_pass"] = st.checkbox("Réservation JR Pass", value=checklist.get("jr_pass", False))
+        checklist["permis_conduire"] = st.checkbox("Permis de conduire international", value=checklist.get("permis_conduire", False))
     with col2:
-        checklist["assurance"] = st.checkbox("Assurance voyage", value=checklist["assurance"])
-        checklist["carte_credit"] = st.checkbox("Carte bancaire internationale", value=checklist["carte_credit"])
-        checklist["especes_yen"] = st.checkbox("Prévoir des espèces en yen", value=checklist["especes_yen"])
+        checklist["assurance"] = st.checkbox("Assurance voyage", value=checklist.get("assurance", False))
+        checklist["carte_credit"] = st.checkbox("Carte bancaire internationale", value=checklist.get("carte_credit", False))
+        checklist["especes_yen"] = st.checkbox("Prévoir des espèces en yen", value=checklist.get("especes_yen", False))
     
     # Électronique
     st.subheader("📱 Électronique")
     col1, col2 = st.columns(2)
     with col1:
-        checklist["adaptateur"] = st.checkbox("Adaptateur secteur Type A/B", value=checklist["adaptateur"])
-        checklist["chargeur_telephone"] = st.checkbox("Chargeur téléphone", value=checklist["chargeur_telephone"])
-        checklist["batterie_externe"] = st.checkbox("Batterie externe", value=checklist["batterie_externe"])
+        checklist["adaptateur"] = st.checkbox("Adaptateur secteur Type A/B", value=checklist.get("adaptateur", False))
+        checklist["chargeur_telephone"] = st.checkbox("Chargeur téléphone", value=checklist.get("chargeur_telephone", False))
+        checklist["batterie_externe"] = st.checkbox("Batterie externe", value=checklist.get("batterie_externe", False))
     with col2:
-        checklist["appareil_photo"] = st.checkbox("Appareil photo", value=checklist["appareil_photo"])
-        checklist["carte_sd"] = st.checkbox("Carte SD de rechange", value=checklist["carte_sd"])
+        checklist["appareil_photo"] = st.checkbox("Appareil photo", value=checklist.get("appareil_photo", False))
+        checklist["carte_sd"] = st.checkbox("Carte SD de rechange", value=checklist.get("carte_sd", False))
     
     # Bagages
     st.subheader("🧳 Bagages")
     col1, col2 = st.columns(2)
     with col1:
-        checklist["valise"] = st.checkbox("Valise/sac à dos", value=checklist["valise"])
-        checklist["vetements"] = st.checkbox("Vêtements adaptés à la saison", value=checklist["vetements"])
-        checklist["chaussures_confortables"] = st.checkbox("Chaussures confortables", value=checklist["chaussures_confortables"])
-        checklist["sous_vetements"] = st.checkbox("Sous-vêtements", value=checklist["sous_vetements"])
-        checklist["pyjama"] = st.checkbox("Pyjama", value=checklist["pyjama"])
+        checklist["valise"] = st.checkbox("Valise/sac à dos", value=checklist.get("valise", False))
+        checklist["vetements"] = st.checkbox("Vêtements adaptés à la saison", value=checklist.get("vetements", False))
+        checklist["chaussures_confortables"] = st.checkbox("Chaussures confortables", value=checklist.get("chaussures_confortables", False))
+        checklist["sous_vetements"] = st.checkbox("Sous-vêtements", value=checklist.get("sous_vetements", False))
+        checklist["pyjama"] = st.checkbox("Pyjama", value=checklist.get("pyjama", False))
     with col2:
-        checklist["serviette"] = st.checkbox("Serviette de toilette", value=checklist["serviette"])
-        checklist["produits_hygiene"] = st.checkbox("Produits d'hygiène", value=checklist["produits_hygiene"])
-        checklist["trousse_secours"] = st.checkbox("Trousse de premiers secours", value=checklist["trousse_secours"])
-        checklist["medicaments"] = st.checkbox("Médicaments personnels", value=checklist["medicaments"])
-        checklist["lunettes_contact"] = st.checkbox("Lunettes/contacts de rechange", value=checklist["lunettes_contact"])
+        checklist["serviette"] = st.checkbox("Serviette de toilette", value=checklist.get("serviette", False))
+        checklist["produits_hygiene"] = st.checkbox("Produits d'hygiène", value=checklist.get("produits_hygiene", False))
+        checklist["trousse_secours"] = st.checkbox("Trousse de premiers secours", value=checklist.get("trousse_secours", False))
+        checklist["medicaments"] = st.checkbox("Médicaments personnels", value=checklist.get("medicaments", False))
+        checklist["lunettes_contact"] = st.checkbox("Lunettes/contacts de rechange", value=checklist.get("lunettes_contact", False))
     
     # Préparatifs administratifs
     st.subheader("📋 Préparatifs administratifs")
     col1, col2 = st.columns(2)
     with col1:
-        checklist["banque"] = st.checkbox("Prévenir sa banque", value=checklist["banque"])
-        checklist["copie_documents"] = st.checkbox("Copies numériques des documents", value=checklist["copie_documents"])
-        checklist["photos_identite"] = st.checkbox("Photos d'identité", value=checklist["photos_identite"])
+        checklist["banque"] = st.checkbox("Prévenir sa banque", value=checklist.get("banque", False))
+        checklist["copie_documents"] = st.checkbox("Copies numériques des documents", value=checklist.get("copie_documents", False))
+        checklist["photos_identite"] = st.checkbox("Photos d'identité", value=checklist.get("photos_identite", False))
     with col2:
-        checklist["adresse_hotel"] = st.checkbox("Adresses des hôtels notées", value=checklist["adresse_hotel"])
-        checklist["itineraire_imprime"] = st.checkbox("Itinéraire imprimé", value=checklist["itineraire_imprime"])
+        checklist["adresse_hotel"] = st.checkbox("Adresses des hôtels notées", value=checklist.get("adresse_hotel", False))
+        checklist["itineraire_imprime"] = st.checkbox("Itinéraire imprimé", value=checklist.get("itineraire_imprime", False))
     
     # Applications utiles
     st.subheader("📱 Applications utiles")
     col1, col2 = st.columns(2)
     with col1:
-        checklist["app_transport"] = st.checkbox("App transport (Hyperdia, Google Maps)", value=checklist["app_transport"])
-        checklist["app_traduction"] = st.checkbox("App traduction (Google Translate)", value=checklist["app_traduction"])
+        checklist["app_transport"] = st.checkbox("App transport (Hyperdia, Google Maps)", value=checklist.get("app_transport", False))
+        checklist["app_traduction"] = st.checkbox("App traduction (Google Translate)", value=checklist.get("app_traduction", False))
     with col2:
-        checklist["app_meteo"] = st.checkbox("App météo", value=checklist["app_meteo"])
-        checklist["app_maps"] = st.checkbox("App cartes hors ligne", value=checklist["app_maps"])
+        checklist["app_meteo"] = st.checkbox("App météo", value=checklist.get("app_meteo", False))
+        checklist["app_maps"] = st.checkbox("App cartes hors ligne", value=checklist.get("app_maps", False))
     
     # Préparatifs pratiques
     st.subheader("🎯 Préparatifs pratiques")
     col1, col2 = st.columns(2)
     with col1:
-        checklist["reservation_hotels"] = st.checkbox("Réservations hôtels confirmées", value=checklist["reservation_hotels"])
-        checklist["reservation_restaurants"] = st.checkbox("Réservations restaurants", value=checklist["reservation_restaurants"])
-        checklist["activites_reservees"] = st.checkbox("Activités réservées", value=checklist["activites_reservees"])
+        checklist["reservation_hotels"] = st.checkbox("Réservations hôtels confirmées", value=checklist.get("reservation_hotels", False))
+        checklist["reservation_restaurants"] = st.checkbox("Réservations restaurants", value=checklist.get("reservation_restaurants", False))
+        checklist["activites_reservees"] = st.checkbox("Activités réservées", value=checklist.get("activites_reservees", False))
     with col2:
-        checklist["transport_aeroport"] = st.checkbox("Transport aéroport organisé", value=checklist["transport_aeroport"])
-        checklist["guide_phrase"] = st.checkbox("Guide de phrases japonaises", value=checklist["guide_phrase"])
+        checklist["transport_aeroport"] = st.checkbox("Transport aéroport organisé", value=checklist.get("transport_aeroport", False))
+        checklist["guide_phrase"] = st.checkbox("Guide de phrases japonaises", value=checklist.get("guide_phrase", False))
     
     # Bouton de sauvegarde
     if st.button("💾 Sauvegarder la checklist"):
