@@ -39,5 +39,195 @@
     "activites_reservees": false,
     "transport_aeroport": false,
     "guide_phrase": false
+  },
+  "travel_profile": {
+    "travelers": "Deux frères, 28 et 30 ans, français",
+    "arrival_date": "2026-04-19",
+    "departure_date": "2026-05-02",
+    "experience": "Première fois",
+    "budget_per_day": 150,
+    "current_reservations": "Aucune",
+    "constraints": "Aucune contrainte particulière",
+    "geographic_orientation": "Route d'Or classique (Tokyo-Kyoto-Osaka) + Alpes Japonaises",
+    "priority_1": "Ambiance urbaine, néons et vie nocturne",
+    "importance_cliches": 3,
+    "travel_rhythm": 4,
+    "planning_preference": 4,
+    "morning_evening": 3,
+    "crowd_tolerance": 3,
+    "golden_week_strategy": "Mix : voir les grands sites avec des stratégies pour éviter les pics",
+    "local_interaction": 2,
+    "city_transport": "Prêt à marcher beaucoup pour s'imprégner des quartiers",
+    "special_needs": "Non",
+    "accommodation_style": "Mix : Auberges + 1 ou 2 nuits de luxe",
+    "ryokan_interest": 1,
+    "onsen_importance": 4,
+    "tattoos": "Non, aucun tatouage",
+    "hotel_location": "En plein cœur de l'action (bruyant mais pratique)",
+    "jr_pass_strategy": "JSP, conseillez-moi la meilleure stratégie globale",
+    "long_distance": "Shinkansen prioritairement, pour l'expérience et le confort",
+    "internet_need": "Connexion permanente indispensable",
+    "cuisine_preferences": "Sushi/Sashimi, Ramen/Udon, Street food (Takoyaki...)",
+    "restaurant_adventure": 5,
+    "local_drinks": 1,
+    "sweet_breaks": 1,
+    "temples_interest": 2,
+    "castles_interest": 1,
+    "museums_interest": 5,
+    "ww2_history": "Je préfère éviter les visites à forte charge émotionnelle",
+    "traditional_workshops": 1,
+    "manga_anime": 3,
+    "gaming": 3,
+    "nightlife": "Karaoké entre amis, Petits bars conviviaux (Izakaya), Ruelles typiques",
+    "modern_architecture": 5,
+    "unusual_experiences": 3,
+    "contemporary_art": 1,
+    "nature_importance": 3,
+    "hiking_interest": 5,
+    "japanese_gardens": 4,
+    "coastal_landscapes": 2,
+    "shopping": "Pas de shopping prévu",
+    "photography": 1,
+    "specific_interests": "Aller voir un combat de Sumo",
+    "activities_to_avoid": "Rien",
+    "detail_level": "Une liste d'activités pour le matin/après-midi/soir",
+    "important_advice": "Transport, Budget détaillé, Savoir-vivre, Réservations, Alternatives, Lexique japonais"
+  },
+  "flight_info": {
+    "outbound": {
+      "airline": "",
+      "flight_number": "",
+      "departure_airport": "CDG",
+      "arrival_airport": "NRT",
+      "departure_date": "2026-04-19",
+      "departure_time": "10:00",
+      "arrival_time": "07:00",
+      "terminal_departure": "",
+      "terminal_arrival": "",
+      "booking_reference": "",
+      "checked_in": false,
+      "boarding_pass": false
+    },
+    "return": {
+      "airline": "",
+      "flight_number": "",
+      "departure_airport": "KIX",
+      "arrival_airport": "CDG",
+      "departure_date": "2026-05-02",
+      "departure_time": "11:00",
+      "arrival_time": "16:00",
+      "terminal_departure": "",
+      "terminal_arrival": "",
+      "booking_reference": "",
+      "checked_in": false,
+      "boarding_pass": false
+    },
+    "notes": "",
+    "baggage_allowance": "",
+    "seat_selection": false,
+    "meal_preference": "",
+    "special_assistance": ""
+  },
+  "budget_planning": {
+    "transport": {
+      "flights": {
+        "budget": 2000,
+        "description": "Billets d'avion aller-retour"
+      },
+      "jr_pass": {
+        "budget": 300,
+        "description": "Japan Rail Pass 7 jours"
+      },
+      "local_transport": {
+        "budget": 150,
+        "description": "Métro, bus, taxis locaux"
+      },
+      "airport_transfer": {
+        "budget": 80,
+        "description": "Transferts aéroport"
+      }
+    },
+    "accommodation": {
+      "hotels": {
+        "budget": 900,
+        "description": "Hôtels standards (12 nuits)"
+      },
+      "ryokan": {
+        "budget": 250,
+        "description": "1 nuit en ryokan avec onsen"
+      },
+      "hostels": {
+        "budget": 350,
+        "description": "Auberges de jeunesse"
+      }
+    },
+    "food": {
+      "restaurants": {
+        "budget": 450,
+        "description": "Restaurants midi/soir"
+      },
+      "street_food": {
+        "budget": 180,
+        "description": "Street food et snacks"
+      },
+      "breakfast": {
+        "budget": 120,
+        "description": "Petits-déjeuners"
+      },
+      "drinks": {
+        "budget": 100,
+        "description": "Boissons et cafés"
+      }
+    },
+    "activities": {
+      "museums": {
+        "budget": 80,
+        "description": "Entrées musées et sites"
+      },
+      "onsen": {
+        "budget": 60,
+        "description": "Bains thermaux"
+      },
+      "guided_tours": {
+        "budget": 120,
+        "description": "Visites guidées"
+      },
+      "experiences": {
+        "budget": 150,
+        "description": "Expériences culturelles"
+      }
+    },
+    "shopping": {
+      "souvenirs": {
+        "budget": 120,
+        "description": "Souvenirs et cadeaux"
+      },
+      "clothing": {
+        "budget": 80,
+        "description": "Vêtements si nécessaire"
+      },
+      "electronics": {
+        "budget": 0,
+        "description": "Électronique"
+      }
+    },
+    "other": {
+      "insurance": {
+        "budget": 100,
+        "description": "Assurance voyage"
+      },
+      "sim_card": {
+        "budget": 40,
+        "description": "Carte SIM/data"
+      },
+      "emergency": {
+        "budget": 120,
+        "description": "Fonds d'urgence"
+      },
+      "tips": {
+        "budget": 30,
+        "description": "Pourboires"
+      }
+    }
   }
 }
