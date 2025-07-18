@@ -213,13 +213,13 @@ def display_checklist():
                 # Affichage de l'état actuel
                 if is_completed:
                     st.markdown(f"""
-                    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 0.5rem; margin: 0.25rem 0; text-align: center;">
+                    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 0.5rem; margin: 0.1rem 0 0.5rem 0; text-align: center;">
                         <span style="color: #10b981; font-weight: bold;">✅ Complété</span>
                     </div>
                     """, unsafe_allow_html=True)
                 else:
                     st.markdown(f"""
-                    <div style="background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 8px; padding: 0.5rem; margin: 0.25rem 0; text-align: center;">
+                    <div style="background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 8px; padding: 0.5rem; margin: 0.1rem 0 0.5rem 0; text-align: center;">
                         <span style="color: #94a3b8;">⭕ En attente</span>
                     </div>
                     """, unsafe_allow_html=True)
