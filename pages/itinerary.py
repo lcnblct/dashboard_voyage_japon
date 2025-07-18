@@ -53,13 +53,61 @@ def display_itinerary():
         st.subheader("Votre itinéraire")
         df = pd.DataFrame(data["itinerary"])
         df = df.sort_values("date")
+        
         for idx, row in df.iterrows():
             with st.expander(f"{row['date']} - {row['city']}"):
                 st.markdown(f"**Activités :** {row['activities']}")
                 st.markdown(f"**Hébergement :** {row['lodging']}")
-                if st.button(f"Supprimer cette étape", key=f"del_{idx}"):
-                    data["itinerary"].pop(idx)
-                    sync_state()
-                    st.rerun()
+                
+                # Boutons d'action
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button(f"✏️ Modifier", key=f"edit_{idx}"):
+                        st.session_state.editing_step = idx
+                        st.rerun()
+                with col2:
+                    if st.button(f"🗑️ Supprimer", key=f"del_{idx}"):
+                        data["itinerary"].pop(idx)
+                        sync_state()
+                        st.rerun()
+                
+                # Formulaire d'édition
+                if st.session_state.get("editing_step") == idx:
+                    st.markdown("---")
+                    st.markdown("**Modifier cette étape :**")
+                    
+                    with st.form(f"edit_step_{idx}"):
+                        # Convertir la date string en date object pour l'input
+                        current_date = date.fromisoformat(row['date'])
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            new_date = st.date_input("Date", value=current_date, key=f"edit_date_{idx}")
+                        with col2:
+                            # Trouver l'index de la ville actuelle dans la liste
+                            current_city_index = 0
+                            if row['city'] in japanese_cities:
+                                current_city_index = japanese_cities.index(row['city']) + 1
+                            new_city = st.selectbox("Ville / Lieu", options=[""] + japanese_cities, index=current_city_index, key=f"edit_city_{idx}")
+                        
+                        new_activities = st.text_area("Activités prévues", value=row['activities'], key=f"edit_activities_{idx}")
+                        new_lodging = st.text_input("Hébergement (nom/lien)", value=row['lodging'], key=f"edit_lodging_{idx}")
+                        
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            if st.form_submit_button("💾 Sauvegarder"):
+                                data["itinerary"][idx] = {
+                                    "date": str(new_date),
+                                    "city": new_city,
+                                    "activities": new_activities,
+                                    "lodging": new_lodging
+                                }
+                                sync_state()
+                                st.session_state.editing_step = None
+                                st.success("Étape modifiée avec succès !")
+                                st.rerun()
+                        with col2:
+                            if st.form_submit_button("❌ Annuler"):
+                                st.session_state.editing_step = None
+                                st.rerun()
     else:
         st.info("Aucune étape d'itinéraire pour l'instant.") 
