@@ -1,1 +1,46 @@
-.DS_Store 
+# Environnement virtuel
+venv/
+env/
+.venv/
+
+# Fichiers Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Fichiers de données
+*.json
+!data.json
+
+# Fichiers de configuration Streamlit
+.streamlit/secrets.toml
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log 

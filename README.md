@@ -45,14 +45,34 @@ Un tableau de bord interactif et personnalisé pour organiser votre voyage au Ja
 ## 🚀 Installation et Utilisation
 
 ### Prérequis
+- Python 3.8 ou supérieur
+- Environnement virtuel recommandé
+
+### Installation Rapide
 ```bash
-pip install -r requirements.txt
+# Cloner le repository
+git clone <votre-repo>
+cd dashboard_voyage_japon
+
+# Utiliser le script de lancement automatique
+./run.sh
 ```
 
-### Lancement
+### Installation Manuelle
 ```bash
+# Créer un environnement virtuel
+python3 -m venv venv
+source venv/bin/activate  # Sur Windows : venv\Scripts\activate
+
+# Installer les dépendances
+pip install -r requirements.txt
+
+# Lancer l'application
 streamlit run app.py
 ```
+
+### 🎨 Thème Sombre
+L'application utilise un **thème sombre forcé** pour une expérience visuelle cohérente, peu importe les préférences système de votre appareil.
 
 ### Configuration
 1. **Mot de passe** : Configurez `st.secrets["PASSWORD"]` dans votre fichier `.streamlit/secrets.toml`

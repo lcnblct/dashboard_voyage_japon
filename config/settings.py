@@ -32,5 +32,24 @@ NAVIGATION_MENU = [
 ]
 
 def configure_page():
-    """Configure la page Streamlit"""
-    st.set_page_config(**PAGE_CONFIG) 
+    """Configure la page Streamlit avec thème sombre forcé"""
+    st.set_page_config(**PAGE_CONFIG)
+    
+    # Forcer le thème sombre de Streamlit
+    st.markdown("""
+    <style>
+        /* Configuration globale pour forcer le mode sombre */
+        :root {
+            --background-color: #0e1117;
+            --text-color: #fafafa;
+            --secondary-background-color: #262730;
+        }
+        
+        /* Override des variables CSS de Streamlit */
+        .stApp {
+            --background-color: #0e1117 !important;
+            --text-color: #fafafa !important;
+            --secondary-background-color: #262730 !important;
+        }
+    </style>
+    """, unsafe_allow_html=True) 
