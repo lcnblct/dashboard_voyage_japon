@@ -37,11 +37,11 @@ def check_password():
     # Interface pour le code à 4 chiffres
     if "code_correct" not in st.session_state:
         st.markdown("""
-        <div style="text-align: center; padding: 1rem 0;">
-            <h2 style="margin: 0; color: #fafafa; font-size: 2rem; font-weight: 300;">
+        <div style="text-align: center; padding: 1.5rem 0;">
+            <h2 style="margin: 0; color: #ffffff; font-size: 2.2rem; font-weight: 400; letter-spacing: -0.5px;">
                 🔐 Accès à l'Application
             </h2>
-            <p style="color: #94a3b8; font-size: 1rem; margin-top: 0.5rem; font-weight: 300;">
+            <p style="color: #9ca3af; font-size: 1.1rem; margin-top: 0.8rem; font-weight: 300;">
                 Entrez votre code à 4 chiffres
             </p>
         </div>
@@ -50,11 +50,11 @@ def check_password():
         # Affichage du code saisi (avec des points)
         code_display = "•" * len(st.session_state.code_input) + "_" * (4 - len(st.session_state.code_input))
         st.markdown(f"""
-        <div style="text-align: center; margin: 1.5rem 0;">
-            <div style="font-family: 'Courier New', monospace; font-size: 2rem; letter-spacing: 1rem; color: #fafafa; margin-bottom: 1rem; font-weight: 600;">
+        <div style="text-align: center; margin: 2rem 0;">
+            <div style="font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace; font-size: 2.2rem; letter-spacing: 1.2rem; color: #ffffff; margin-bottom: 1.2rem; font-weight: 500;">
                 {code_display}
             </div>
-            <p style="color: #94a3b8; font-size: 0.9rem; font-weight: 300;">
+            <p style="color: #9ca3af; font-size: 1rem; font-weight: 300;">
                 {len(st.session_state.code_input)}/4 chiffres
             </p>
         </div>
@@ -67,40 +67,39 @@ def check_password():
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
-            margin: 1rem auto;
-            max-width: 300px;
+            gap: 0.6rem;
+            margin: 1.5rem auto;
+            max-width: 280px;
             padding: 0 1rem;
         }
         .numpad-row {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.6rem;
             justify-content: center;
             width: 100%;
         }
         .numpad-button {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             border: none;
-            border-radius: 12px;
-            background: linear-gradient(145deg, #2d3748, #1a202c);
-            color: #fafafa;
-            font-size: 1.5rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+            color: #ffffff;
+            font-size: 1.6rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             user-select: none;
             box-shadow: 
-                0 2px 4px -1px rgba(0, 0, 0, 0.1),
-                0 1px 2px -1px rgba(0, 0, 0, 0.06),
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
-            flex: 1;
-            max-width: 60px;
+            flex-shrink: 0;
         }
         .numpad-button::before {
             content: '';
@@ -109,48 +108,68 @@ def check_password():
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(145deg, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
             opacity: 0;
             transition: opacity 0.2s ease;
         }
         .numpad-button:hover {
-            background: linear-gradient(145deg, #4a5568, #2d3748);
-            transform: translateY(-2px) scale(1.02);
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            transform: translateY(-2px);
             box-shadow: 
-                0 4px 8px -2px rgba(0, 0, 0, 0.2),
-                0 2px 4px -1px rgba(0, 0, 0, 0.1),
+                0 8px 15px -3px rgba(0, 0, 0, 0.2),
+                0 4px 6px -2px rgba(0, 0, 0, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
         .numpad-button:hover::before {
             opacity: 1;
         }
         .numpad-button:active {
-            transform: translateY(0) scale(0.98);
+            transform: translateY(0);
             box-shadow: 
-                0 1px 2px -1px rgba(0, 0, 0, 0.2),
+                0 2px 4px -1px rgba(0, 0, 0, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
         .numpad-button.delete {
-            background: linear-gradient(145deg, #e53e3e, #c53030);
-            font-size: 1.3rem;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            font-size: 1.4rem;
         }
         .numpad-button.delete:hover {
-            background: linear-gradient(145deg, #f56565, #e53e3e);
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         }
         .numpad-button.enter {
-            background: linear-gradient(145deg, #38a169, #2f855a);
-            font-size: 1.3rem;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            font-size: 1.4rem;
         }
         .numpad-button.enter:hover {
-            background: linear-gradient(145deg, #48bb78, #38a169);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
         
         /* Responsive pour mobile */
         @media (max-width: 768px) {
             .numpad-container {
-                max-width: 280px;
+                max-width: 260px;
+                gap: 0.5rem;
+                margin: 1rem auto;
+            }
+            .numpad-row {
+                gap: 0.5rem;
+            }
+            .numpad-button {
+                width: 55px;
+                height: 55px;
+                font-size: 1.4rem;
+                border-radius: 14px;
+            }
+            .numpad-button.delete, .numpad-button.enter {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* Très petits écrans */
+        @media (max-width: 480px) {
+            .numpad-container {
+                max-width: 240px;
                 gap: 0.4rem;
-                margin: 0.5rem auto;
             }
             .numpad-row {
                 gap: 0.4rem;
@@ -159,32 +178,10 @@ def check_password():
                 width: 50px;
                 height: 50px;
                 font-size: 1.3rem;
-                border-radius: 10px;
-                max-width: 50px;
+                border-radius: 12px;
             }
             .numpad-button.delete, .numpad-button.enter {
                 font-size: 1.1rem;
-            }
-        }
-        
-        /* Très petits écrans */
-        @media (max-width: 480px) {
-            .numpad-container {
-                max-width: 240px;
-                gap: 0.3rem;
-            }
-            .numpad-row {
-                gap: 0.3rem;
-            }
-            .numpad-button {
-                width: 45px;
-                height: 45px;
-                font-size: 1.2rem;
-                border-radius: 8px;
-                max-width: 45px;
-            }
-            .numpad-button.delete, .numpad-button.enter {
-                font-size: 1rem;
             }
         }
         </style>
@@ -259,11 +256,11 @@ def check_password():
         
     elif not st.session_state["code_correct"]:
         st.markdown("""
-        <div style="text-align: center; padding: 1rem 0;">
-            <h2 style="margin: 0; color: #fafafa; font-size: 2rem; font-weight: 300;">
+        <div style="text-align: center; padding: 1.5rem 0;">
+            <h2 style="margin: 0; color: #ffffff; font-size: 2.2rem; font-weight: 400; letter-spacing: -0.5px;">
                 🔐 Accès à l'Application
             </h2>
-            <p style="color: #94a3b8; font-size: 1rem; margin-top: 0.5rem; font-weight: 300;">
+            <p style="color: #9ca3af; font-size: 1.1rem; margin-top: 0.8rem; font-weight: 300;">
                 Entrez votre code à 4 chiffres
             </p>
         </div>
@@ -272,11 +269,11 @@ def check_password():
         # Affichage du code saisi (avec des points)
         code_display = "•" * len(st.session_state.code_input) + "_" * (4 - len(st.session_state.code_input))
         st.markdown(f"""
-        <div style="text-align: center; margin: 1.5rem 0;">
-            <div style="font-family: 'Courier New', monospace; font-size: 2rem; letter-spacing: 1rem; color: #fafafa; margin-bottom: 1rem; font-weight: 600;">
+        <div style="text-align: center; margin: 2rem 0;">
+            <div style="font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace; font-size: 2.2rem; letter-spacing: 1.2rem; color: #ffffff; margin-bottom: 1.2rem; font-weight: 500;">
                 {code_display}
             </div>
-            <p style="color: #94a3b8; font-size: 0.9rem; font-weight: 300;">
+            <p style="color: #9ca3af; font-size: 1rem; font-weight: 300;">
                 {len(st.session_state.code_input)}/4 chiffres
             </p>
         </div>
@@ -289,40 +286,39 @@ def check_password():
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
-            margin: 1rem auto;
-            max-width: 300px;
+            gap: 0.6rem;
+            margin: 1.5rem auto;
+            max-width: 280px;
             padding: 0 1rem;
         }
         .numpad-row {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.6rem;
             justify-content: center;
             width: 100%;
         }
         .numpad-button {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             border: none;
-            border-radius: 12px;
-            background: linear-gradient(145deg, #2d3748, #1a202c);
-            color: #fafafa;
-            font-size: 1.5rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+            color: #ffffff;
+            font-size: 1.6rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             user-select: none;
             box-shadow: 
-                0 2px 4px -1px rgba(0, 0, 0, 0.1),
-                0 1px 2px -1px rgba(0, 0, 0, 0.06),
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
-            flex: 1;
-            max-width: 60px;
+            flex-shrink: 0;
         }
         .numpad-button::before {
             content: '';
@@ -331,48 +327,68 @@ def check_password():
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(145deg, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
             opacity: 0;
             transition: opacity 0.2s ease;
         }
         .numpad-button:hover {
-            background: linear-gradient(145deg, #4a5568, #2d3748);
-            transform: translateY(-2px) scale(1.02);
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            transform: translateY(-2px);
             box-shadow: 
-                0 4px 8px -2px rgba(0, 0, 0, 0.2),
-                0 2px 4px -1px rgba(0, 0, 0, 0.1),
+                0 8px 15px -3px rgba(0, 0, 0, 0.2),
+                0 4px 6px -2px rgba(0, 0, 0, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
         .numpad-button:hover::before {
             opacity: 1;
         }
         .numpad-button:active {
-            transform: translateY(0) scale(0.98);
+            transform: translateY(0);
             box-shadow: 
-                0 1px 2px -1px rgba(0, 0, 0, 0.2),
+                0 2px 4px -1px rgba(0, 0, 0, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
         .numpad-button.delete {
-            background: linear-gradient(145deg, #e53e3e, #c53030);
-            font-size: 1.3rem;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            font-size: 1.4rem;
         }
         .numpad-button.delete:hover {
-            background: linear-gradient(145deg, #f56565, #e53e3e);
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         }
         .numpad-button.enter {
-            background: linear-gradient(145deg, #38a169, #2f855a);
-            font-size: 1.3rem;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            font-size: 1.4rem;
         }
         .numpad-button.enter:hover {
-            background: linear-gradient(145deg, #48bb78, #38a169);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
         
         /* Responsive pour mobile */
         @media (max-width: 768px) {
             .numpad-container {
-                max-width: 280px;
+                max-width: 260px;
+                gap: 0.5rem;
+                margin: 1rem auto;
+            }
+            .numpad-row {
+                gap: 0.5rem;
+            }
+            .numpad-button {
+                width: 55px;
+                height: 55px;
+                font-size: 1.4rem;
+                border-radius: 14px;
+            }
+            .numpad-button.delete, .numpad-button.enter {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* Très petits écrans */
+        @media (max-width: 480px) {
+            .numpad-container {
+                max-width: 240px;
                 gap: 0.4rem;
-                margin: 0.5rem auto;
             }
             .numpad-row {
                 gap: 0.4rem;
@@ -381,32 +397,10 @@ def check_password():
                 width: 50px;
                 height: 50px;
                 font-size: 1.3rem;
-                border-radius: 10px;
-                max-width: 50px;
+                border-radius: 12px;
             }
             .numpad-button.delete, .numpad-button.enter {
                 font-size: 1.1rem;
-            }
-        }
-        
-        /* Très petits écrans */
-        @media (max-width: 480px) {
-            .numpad-container {
-                max-width: 240px;
-                gap: 0.3rem;
-            }
-            .numpad-row {
-                gap: 0.3rem;
-            }
-            .numpad-button {
-                width: 45px;
-                height: 45px;
-                font-size: 1.2rem;
-                border-radius: 8px;
-                max-width: 45px;
-            }
-            .numpad-button.delete, .numpad-button.enter {
-                font-size: 1rem;
             }
         }
         </style>
