@@ -38,10 +38,10 @@ def check_password():
     if "code_correct" not in st.session_state:
         st.markdown("""
         <div style="text-align: center; padding: 1.5rem 0;">
-            <h2 style="margin: 0; color: #ffffff; font-size: 2.2rem; font-weight: 400; letter-spacing: -0.5px;">
+            <h2 style="margin: 0; color: #ffffff; font-size: 2.2rem; font-weight: 400; letter-spacing: -0.5px; background: transparent;">
                 🔐 Accès à l'Application
             </h2>
-            <p style="color: #9ca3af; font-size: 1.1rem; margin-top: 0.8rem; font-weight: 300;">
+            <p style="color: #9ca3af; font-size: 1.1rem; margin-top: 0.8rem; font-weight: 300; background: transparent;">
                 Entrez votre code à 4 chiffres
             </p>
         </div>
@@ -50,11 +50,11 @@ def check_password():
         # Affichage du code saisi (avec des points)
         code_display = "•" * len(st.session_state.code_input) + "_" * (4 - len(st.session_state.code_input))
         st.markdown(f"""
-        <div style="text-align: center; margin: 2rem 0;">
-            <div style="font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace; font-size: 2.2rem; letter-spacing: 1.2rem; color: #ffffff; margin-bottom: 1.2rem; font-weight: 500;">
+        <div style="text-align: center; margin: 2rem 0; background: transparent;">
+            <div style="font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace; font-size: 2.2rem; letter-spacing: 1.2rem; color: #ffffff; margin-bottom: 1.2rem; font-weight: 500; background: transparent;">
                 {code_display}
             </div>
-            <p style="color: #9ca3af; font-size: 1rem; font-weight: 300;">
+            <p style="color: #9ca3af; font-size: 1rem; font-weight: 300; background: transparent;">
                 {len(st.session_state.code_input)}/4 chiffres
             </p>
         </div>
@@ -63,6 +63,34 @@ def check_password():
         # CSS pour le clavier numérique élégant
         st.markdown("""
         <style>
+        /* Suppression des fonds par défaut */
+        .stMarkdown, .stMarkdown > div {
+            background: transparent !important;
+        }
+        .stMarkdown p, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+            background: transparent !important;
+        }
+        /* Forcer la transparence sur tous les éléments de texte */
+        div[data-testid="stMarkdown"] {
+            background: transparent !important;
+        }
+        div[data-testid="stMarkdown"] * {
+            background: transparent !important;
+        }
+        /* Suppression des fonds des messages */
+        .stAlert, .stAlert > div {
+            background: transparent !important;
+        }
+        .stAlert [data-testid="stAlert"] {
+            background: transparent !important;
+        }
+        /* Suppression des fonds des warnings et erreurs */
+        .stAlert [data-testid="stAlert"] > div {
+            background: transparent !important;
+        }
+        .stAlert [data-testid="stAlert"] > div > div {
+            background: transparent !important;
+        }
         .numpad-container {
             display: flex;
             flex-direction: column;
@@ -243,9 +271,21 @@ def check_password():
         # Validation en temps réel
         if st.session_state.code_input:
             if not re.match(r'^\d{4}$', st.session_state.code_input):
-                st.warning("⚠️ Le code doit contenir exactement 4 chiffres")
+                st.markdown("""
+                <div style="text-align: center; margin: 1rem 0; background: transparent;">
+                    <p style="color: #fbbf24; font-size: 1rem; font-weight: 400; background: transparent;">
+                        ⚠️ Le code doit contenir exactement 4 chiffres
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
             elif "code_correct" in st.session_state and not st.session_state["code_correct"]:
-                st.error("❌ Code incorrect")
+                st.markdown("""
+                <div style="text-align: center; margin: 1rem 0; background: transparent;">
+                    <p style="color: #f87171; font-size: 1rem; font-weight: 400; background: transparent;">
+                        ❌ Code incorrect
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
         
         # Auto-validation quand 4 chiffres sont saisis
         if len(st.session_state.code_input) == 4:
@@ -257,10 +297,10 @@ def check_password():
     elif not st.session_state["code_correct"]:
         st.markdown("""
         <div style="text-align: center; padding: 1.5rem 0;">
-            <h2 style="margin: 0; color: #ffffff; font-size: 2.2rem; font-weight: 400; letter-spacing: -0.5px;">
+            <h2 style="margin: 0; color: #ffffff; font-size: 2.2rem; font-weight: 400; letter-spacing: -0.5px; background: transparent;">
                 🔐 Accès à l'Application
             </h2>
-            <p style="color: #9ca3af; font-size: 1.1rem; margin-top: 0.8rem; font-weight: 300;">
+            <p style="color: #9ca3af; font-size: 1.1rem; margin-top: 0.8rem; font-weight: 300; background: transparent;">
                 Entrez votre code à 4 chiffres
             </p>
         </div>
@@ -269,11 +309,11 @@ def check_password():
         # Affichage du code saisi (avec des points)
         code_display = "•" * len(st.session_state.code_input) + "_" * (4 - len(st.session_state.code_input))
         st.markdown(f"""
-        <div style="text-align: center; margin: 2rem 0;">
-            <div style="font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace; font-size: 2.2rem; letter-spacing: 1.2rem; color: #ffffff; margin-bottom: 1.2rem; font-weight: 500;">
+        <div style="text-align: center; margin: 2rem 0; background: transparent;">
+            <div style="font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace; font-size: 2.2rem; letter-spacing: 1.2rem; color: #ffffff; margin-bottom: 1.2rem; font-weight: 500; background: transparent;">
                 {code_display}
             </div>
-            <p style="color: #9ca3af; font-size: 1rem; font-weight: 300;">
+            <p style="color: #9ca3af; font-size: 1rem; font-weight: 300; background: transparent;">
                 {len(st.session_state.code_input)}/4 chiffres
             </p>
         </div>
@@ -461,9 +501,21 @@ def check_password():
         
         if st.session_state.code_input:
             if not re.match(r'^\d{4}$', st.session_state.code_input):
-                st.warning("⚠️ Le code doit contenir exactement 4 chiffres")
+                st.markdown("""
+                <div style="text-align: center; margin: 1rem 0; background: transparent;">
+                    <p style="color: #fbbf24; font-size: 1rem; font-weight: 400; background: transparent;">
+                        ⚠️ Le code doit contenir exactement 4 chiffres
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
             else:
-                st.error("❌ Code incorrect")
+                st.markdown("""
+                <div style="text-align: center; margin: 1rem 0; background: transparent;">
+                    <p style="color: #f87171; font-size: 1rem; font-weight: 400; background: transparent;">
+                        ❌ Code incorrect
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
         
         # Auto-validation quand 4 chiffres sont saisis
         if len(st.session_state.code_input) == 4:
