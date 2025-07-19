@@ -1,5 +1,6 @@
 # Page des informations de vol
 import streamlit as st
+from datetime import datetime
 from data.models import get_default_flight_info
 from data.storage import sync_state
 
