@@ -4,7 +4,7 @@ from datetime import datetime, date
 import re
 
 def check_password():
-    """Vérifie le code à 4 chiffres de l'application avec pavé numérique virtuel"""
+    """Vérifie le code à 4 chiffres de l'application avec pavé numérique virtuel élégant"""
     
     # Initialisation du code saisi
     if "code_input" not in st.session_state:
@@ -38,10 +38,10 @@ def check_password():
     if "code_correct" not in st.session_state:
         st.markdown("""
         <div style="text-align: center; padding: 2rem 0;">
-            <h2 style="margin: 0; color: #fafafa;">
+            <h2 style="margin: 0; color: #fafafa; font-size: 2.5rem; font-weight: 300;">
                 🔐 Accès à l'Application
             </h2>
-            <p style="color: #94a3b8; font-size: 1.1rem; margin-top: 0.5rem;">
+            <p style="color: #94a3b8; font-size: 1.2rem; margin-top: 1rem; font-weight: 300;">
                 Entrez votre code à 4 chiffres
             </p>
         </div>
@@ -50,71 +50,111 @@ def check_password():
         # Affichage du code saisi (avec des points)
         code_display = "•" * len(st.session_state.code_input) + "_" * (4 - len(st.session_state.code_input))
         st.markdown(f"""
-        <div style="text-align: center; margin: 2rem 0;">
-            <div style="font-family: 'Courier New', monospace; font-size: 2rem; letter-spacing: 1rem; color: #fafafa; margin-bottom: 1rem;">
+        <div style="text-align: center; margin: 3rem 0;">
+            <div style="font-family: 'Courier New', monospace; font-size: 2.5rem; letter-spacing: 1.5rem; color: #fafafa; margin-bottom: 1.5rem; font-weight: 600;">
                 {code_display}
             </div>
-            <p style="color: #94a3b8; font-size: 0.9rem;">
+            <p style="color: #94a3b8; font-size: 1rem; font-weight: 300;">
                 {len(st.session_state.code_input)}/4 chiffres
             </p>
         </div>
         """, unsafe_allow_html=True)
         
-        # Pavé numérique virtuel
+        # CSS pour le clavier numérique élégant
         st.markdown("""
         <style>
         .numpad-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
-            margin: 2rem 0;
+            gap: 0.8rem;
+            margin: 2rem auto;
+            max-width: 400px;
         }
         .numpad-row {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.8rem;
+            justify-content: center;
         }
         .numpad-button {
-            width: 60px;
-            height: 60px;
-            border: 2px solid #4a5568;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            width: 80px;
+            height: 80px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #2d3748, #1a202c);
             color: #fafafa;
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 2rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
             user-select: none;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .numpad-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         .numpad-button:hover {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: linear-gradient(145deg, #4a5568, #2d3748);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 
+                0 10px 25px -3px rgba(0, 0, 0, 0.3),
+                0 4px 6px -2px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .numpad-button:hover::before {
+            opacity: 1;
         }
         .numpad-button:active {
-            transform: translateY(0);
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.2),
+                0 2px 4px -1px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
         .numpad-button.delete {
-            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            background: linear-gradient(145deg, #e53e3e, #c53030);
+            font-size: 1.8rem;
         }
         .numpad-button.delete:hover {
-            background: linear-gradient(135deg, #c53030 0%, #a0aec0 100%);
+            background: linear-gradient(145deg, #f56565, #e53e3e);
         }
         .numpad-button.enter {
-            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            background: linear-gradient(145deg, #38a169, #2f855a);
+            font-size: 1.8rem;
         }
         .numpad-button.enter:hover {
-            background: linear-gradient(135deg, #2f855a 0%, #276749 100%);
+            background: linear-gradient(145deg, #48bb78, #38a169);
+        }
+        .numpad-button.zero {
+            width: 80px;
+        }
+        .numpad-button.delete, .numpad-button.enter {
+            width: 80px;
         }
         </style>
         """, unsafe_allow_html=True)
         
+        # Container pour le clavier
+        st.markdown('<div class="numpad-container">', unsafe_allow_html=True)
+        
         # Première rangée : 1, 2, 3
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             if st.button("1", key="btn_1", use_container_width=True):
                 add_digit(1)
@@ -126,7 +166,7 @@ def check_password():
                 add_digit(3)
         
         # Deuxième rangée : 4, 5, 6
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             if st.button("4", key="btn_4", use_container_width=True):
                 add_digit(4)
@@ -138,7 +178,7 @@ def check_password():
                 add_digit(6)
         
         # Troisième rangée : 7, 8, 9
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             if st.button("7", key="btn_7", use_container_width=True):
                 add_digit(7)
@@ -150,7 +190,7 @@ def check_password():
                 add_digit(9)
         
         # Quatrième rangée : Effacer, 0, Valider
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             if st.button("⌫", key="btn_delete", use_container_width=True):
                 delete_digit()
@@ -161,16 +201,7 @@ def check_password():
             if st.button("✓", key="btn_enter", use_container_width=True):
                 validate_code()
         
-        # Champ de saisie caché pour la compatibilité clavier
-        st.text_input(
-            "Code d'accès (clavier)", 
-            value=st.session_state.code_input,
-            type="password", 
-            max_chars=4,
-            key="code_input_hidden",
-            help="Saisie clavier alternative",
-            label_visibility="collapsed"
-        )
+        st.markdown('</div>', unsafe_allow_html=True)
         
         # Validation en temps réel
         if st.session_state.code_input:
@@ -182,16 +213,17 @@ def check_password():
         # Auto-validation quand 4 chiffres sont saisis
         if len(st.session_state.code_input) == 4:
             validate_code()
+            st.rerun()
         
         st.stop()
         
     elif not st.session_state["code_correct"]:
         st.markdown("""
         <div style="text-align: center; padding: 2rem 0;">
-            <h2 style="margin: 0; color: #fafafa;">
+            <h2 style="margin: 0; color: #fafafa; font-size: 2.5rem; font-weight: 300;">
                 🔐 Accès à l'Application
             </h2>
-            <p style="color: #94a3b8; font-size: 1.1rem; margin-top: 0.5rem;">
+            <p style="color: #94a3b8; font-size: 1.2rem; margin-top: 1rem; font-weight: 300;">
                 Entrez votre code à 4 chiffres
             </p>
         </div>
@@ -200,19 +232,111 @@ def check_password():
         # Affichage du code saisi (avec des points)
         code_display = "•" * len(st.session_state.code_input) + "_" * (4 - len(st.session_state.code_input))
         st.markdown(f"""
-        <div style="text-align: center; margin: 2rem 0;">
-            <div style="font-family: 'Courier New', monospace; font-size: 2rem; letter-spacing: 1rem; color: #fafafa; margin-bottom: 1rem;">
+        <div style="text-align: center; margin: 3rem 0;">
+            <div style="font-family: 'Courier New', monospace; font-size: 2.5rem; letter-spacing: 1.5rem; color: #fafafa; margin-bottom: 1.5rem; font-weight: 600;">
                 {code_display}
             </div>
-            <p style="color: #94a3b8; font-size: 0.9rem;">
+            <p style="color: #94a3b8; font-size: 1rem; font-weight: 300;">
                 {len(st.session_state.code_input)}/4 chiffres
             </p>
         </div>
         """, unsafe_allow_html=True)
         
-        # Pavé numérique virtuel (même que ci-dessus)
+        # CSS pour le clavier numérique élégant (même style)
+        st.markdown("""
+        <style>
+        .numpad-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 2rem auto;
+            max-width: 400px;
+        }
+        .numpad-row {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+        }
+        .numpad-button {
+            width: 80px;
+            height: 80px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #2d3748, #1a202c);
+            color: #fafafa;
+            font-size: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .numpad-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .numpad-button:hover {
+            background: linear-gradient(145deg, #4a5568, #2d3748);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 
+                0 10px 25px -3px rgba(0, 0, 0, 0.3),
+                0 4px 6px -2px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        .numpad-button:hover::before {
+            opacity: 1;
+        }
+        .numpad-button:active {
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.2),
+                0 2px 4px -1px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        .numpad-button.delete {
+            background: linear-gradient(145deg, #e53e3e, #c53030);
+            font-size: 1.8rem;
+        }
+        .numpad-button.delete:hover {
+            background: linear-gradient(145deg, #f56565, #e53e3e);
+        }
+        .numpad-button.enter {
+            background: linear-gradient(145deg, #38a169, #2f855a);
+            font-size: 1.8rem;
+        }
+        .numpad-button.enter:hover {
+            background: linear-gradient(145deg, #48bb78, #38a169);
+        }
+        .numpad-button.zero {
+            width: 80px;
+        }
+        .numpad-button.delete, .numpad-button.enter {
+            width: 80px;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Container pour le clavier
+        st.markdown('<div class="numpad-container">', unsafe_allow_html=True)
+        
         # Première rangée : 1, 2, 3
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             if st.button("1", key="btn_1_retry", use_container_width=True):
                 add_digit(1)
@@ -224,7 +348,7 @@ def check_password():
                 add_digit(3)
         
         # Deuxième rangée : 4, 5, 6
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             if st.button("4", key="btn_4_retry", use_container_width=True):
                 add_digit(4)
@@ -236,7 +360,7 @@ def check_password():
                 add_digit(6)
         
         # Troisième rangée : 7, 8, 9
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             if st.button("7", key="btn_7_retry", use_container_width=True):
                 add_digit(7)
@@ -248,7 +372,7 @@ def check_password():
                 add_digit(9)
         
         # Quatrième rangée : Effacer, 0, Valider
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             if st.button("⌫", key="btn_delete_retry", use_container_width=True):
                 delete_digit()
@@ -259,16 +383,7 @@ def check_password():
             if st.button("✓", key="btn_enter_retry", use_container_width=True):
                 validate_code()
         
-        # Champ de saisie caché pour la compatibilité clavier
-        st.text_input(
-            "Code d'accès (clavier)", 
-            value=st.session_state.code_input,
-            type="password", 
-            max_chars=4,
-            key="code_input_hidden_retry",
-            help="Saisie clavier alternative",
-            label_visibility="collapsed"
-        )
+        st.markdown('</div>', unsafe_allow_html=True)
         
         if st.session_state.code_input:
             if not re.match(r'^\d{4}$', st.session_state.code_input):
@@ -279,6 +394,7 @@ def check_password():
         # Auto-validation quand 4 chiffres sont saisis
         if len(st.session_state.code_input) == 4:
             validate_code()
+            st.rerun()
         
         st.stop()
 
