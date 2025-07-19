@@ -33,12 +33,13 @@ def display_settings():
         st.subheader("🔄 Reset de l'application")
         st.warning("⚠️ Cette action supprimera définitivement toutes vos données !")
         
-        # Formulaire de confirmation avec mot de passe
+        # Formulaire de confirmation avec code à 4 chiffres
         with st.form("reset_confirmation"):
-            reset_password = st.text_input(
-                "Mot de passe de confirmation", 
+            reset_code = st.text_input(
+                "Code de confirmation (4 chiffres)", 
                 type="password",
-                help="Entrez le mot de passe pour confirmer le reset"
+                max_chars=4,
+                help="Entrez votre code à 4 chiffres pour confirmer le reset"
             )
             reset_confirmed = st.checkbox(
                 "Je confirme vouloir supprimer toutes mes données",
@@ -48,7 +49,7 @@ def display_settings():
             submitted = st.form_submit_button("🗑️ Reset Application", type="secondary")
             
             if submitted:
-                if reset_password == st.secrets["PASSWORD"] and reset_confirmed:
+                if reset_code == st.secrets["ACCESS_CODE"] and reset_confirmed:
                     # Supprimer le fichier de données
                     if os.path.exists(DATA_FILE):
                         os.remove(DATA_FILE)
@@ -58,8 +59,8 @@ def display_settings():
                     st.session_state.initialized = True
                     st.success("✅ Application remise à zéro avec succès !")
                     st.rerun()
-                elif reset_password != st.secrets["PASSWORD"]:
-                    st.error("❌ Mot de passe incorrect")
+                elif reset_code != st.secrets["ACCESS_CODE"]:
+                    st.error("❌ Code incorrect")
                 elif not reset_confirmed:
                     st.error("❌ Veuillez confirmer la suppression")
                 else:

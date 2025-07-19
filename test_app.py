@@ -30,6 +30,6 @@ if __name__ == "__main__":
     if success:
         print("✅ L'application fonctionne correctement!")
         print("Vous pouvez maintenant accéder à l'application via votre navigateur.")
-        print("Mot de passe: japon2024")
+        print("Code d'accès: 1234")
     else:
         print("❌ L'application ne répond pas.")

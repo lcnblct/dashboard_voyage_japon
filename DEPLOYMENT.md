@@ -23,7 +23,7 @@ Assurez-vous que votre repository contient :
 4. Dans "Advanced settings" → "Secrets", ajoutez :
 
 ```toml
-PASSWORD = "votre_mot_de_passe_securise"
+ACCESS_CODE = "1234"
 GROQ_API_KEY = "votre_clé_api_groq"
 ```
 

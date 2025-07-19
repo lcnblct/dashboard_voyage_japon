@@ -119,7 +119,7 @@ if "initialized" not in st.session_state:
     st.session_state.data = load_data()
     st.session_state.initialized = True
 
-# --- Protection par mot de passe ---
+# --- Protection par code d'accès ---
 check_password()
 
 # --- Navigation principale ---

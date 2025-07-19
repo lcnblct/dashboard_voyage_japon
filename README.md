@@ -89,7 +89,7 @@ streamlit run app.py
 L'application utilise un **thème sombre forcé** pour une expérience visuelle cohérente, peu importe les préférences système de votre appareil.
 
 ### Configuration
-1. **Mot de passe** : Configurez `st.secrets["PASSWORD"]` dans votre fichier `.streamlit/secrets.toml`
+1. **Code d'accès** : Configurez `st.secrets["ACCESS_CODE"]` dans votre fichier `.streamlit/secrets.toml` (code à 4 chiffres)
 2. **Première utilisation** : Complétez votre profil de voyage dans la section "Profil de Voyage"
 3. **Données** : Toutes vos informations sont sauvegardées dans `data.json`
 
