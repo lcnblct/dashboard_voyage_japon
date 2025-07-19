@@ -13,19 +13,19 @@ from config.styles import apply_styles
 from data.storage import load_data, sync_state
 from utils.helpers import check_password
 
-# Import des pages
-from pages.home import display_home
-from pages.travel_profile import display_travel_profile
-from pages.prompt_generator import display_prompt_generator
-from pages.ai_assistant import display_ai_assistant
-from pages.itinerary import display_itinerary
-from pages.calendar import display_calendar
-from pages.flight import display_flight
-from pages.budget import display_budget
-from pages.checklist import display_checklist
-from pages.map import display_map
-from pages.resources import display_resources
-from pages.settings import display_settings
+# Import des modules
+from modules.home import display_home
+from modules.travel_profile import display_travel_profile
+from modules.prompt_generator import display_prompt_generator
+from modules.ai_assistant import display_ai_assistant
+from modules.itinerary import display_itinerary
+from modules.calendar import display_calendar
+from modules.flight import display_flight
+from modules.budget import display_budget
+from modules.checklist import display_checklist
+from modules.map import display_map
+from modules.resources import display_resources
+from modules.settings import display_settings
 
 # Configuration de la page
 configure_page()

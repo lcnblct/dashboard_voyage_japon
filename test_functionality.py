@@ -32,36 +32,36 @@ def test_imports():
         from utils.helpers import check_password, format_currency, calculate_days_until_departure
         print("✅ utils.helpers - OK")
         
-        # Test des pages
-        from pages.home import display_home
-        print("✅ pages.home - OK")
+        # Test des modules
+        from modules.home import display_home
+        print("✅ modules.home - OK")
         
-        from pages.travel_profile import display_travel_profile
-        print("✅ pages.travel_profile - OK")
+        from modules.travel_profile import display_travel_profile
+        print("✅ modules.travel_profile - OK")
         
-        from pages.itinerary import display_itinerary
-        print("✅ pages.itinerary - OK")
+        from modules.itinerary import display_itinerary
+        print("✅ modules.itinerary - OK")
         
-        from pages.calendar import display_calendar
-        print("✅ pages.calendar - OK")
+        from modules.calendar import display_calendar
+        print("✅ modules.calendar - OK")
         
-        from pages.flight import display_flight
-        print("✅ pages.flight - OK")
+        from modules.flight import display_flight
+        print("✅ modules.flight - OK")
         
-        from pages.budget import display_budget
-        print("✅ pages.budget - OK")
+        from modules.budget import display_budget
+        print("✅ modules.budget - OK")
         
-        from pages.checklist import display_checklist
-        print("✅ pages.checklist - OK")
+        from modules.checklist import display_checklist
+        print("✅ modules.checklist - OK")
         
-        from pages.map import display_map
-        print("✅ pages.map - OK")
+        from modules.map import display_map
+        print("✅ modules.map - OK")
         
-        from pages.resources import display_resources
-        print("✅ pages.resources - OK")
+        from modules.resources import display_resources
+        print("✅ modules.resources - OK")
         
-        from pages.settings import display_settings
-        print("✅ pages.settings - OK")
+        from modules.settings import display_settings
+        print("✅ modules.settings - OK")
         
         # Test de l'application complète
         import app
@@ -122,16 +122,16 @@ def test_file_structure():
         "data/storage.py",
         "data/cities.py",
         "utils/helpers.py",
-        "pages/home.py",
-        "pages/travel_profile.py",
-        "pages/itinerary.py",
-        "pages/calendar.py",
-        "pages/flight.py",
-        "pages/budget.py",
-        "pages/checklist.py",
-        "pages/map.py",
-        "pages/resources.py",
-        "pages/settings.py",
+        "modules/home.py",
+        "modules/travel_profile.py",
+        "modules/itinerary.py",
+        "modules/calendar.py",
+        "modules/flight.py",
+        "modules/budget.py",
+        "modules/checklist.py",
+        "modules/map.py",
+        "modules/resources.py",
+        "modules/settings.py",
         "data.json"
     ]
     

@@ -19,7 +19,7 @@ dashboard_voyage_japon/
 │   ├── models.py            # Structures de données par défaut (305 lignes)
 │   ├── storage.py           # Fonctions de sauvegarde/chargement (72 lignes)
 │   └── cities.py            # Coordonnées des villes (72 lignes)
-├── pages/
+├── modules/
 │   ├── __init__.py
 │   ├── home.py              # Page d'accueil (145 lignes)
 │   ├── travel_profile.py    # Profil de voyage (128 lignes)
@@ -65,7 +65,7 @@ dashboard_voyage_japon/
 - **storage.py** : Gestion du stockage JSON et synchronisation
 - **cities.py** : Coordonnées géographiques des villes japonaises
 
-### `pages/`
+### `modules/`
 - **home.py** : Tableau de bord principal avec métriques et recommandations
 - **travel_profile.py** : Gestion du profil de voyage personnalisé
 - **itinerary.py** : Création et gestion de l'itinéraire
@@ -100,7 +100,7 @@ Tous les modules ont été testés pour la syntaxe Python :
 python -m py_compile app.py
 python -m py_compile config/*.py
 python -m py_compile data/*.py
-python -m py_compile pages/*.py
+python -m py_compile modules/*.py
 python -m py_compile utils/*.py
 ```
 
