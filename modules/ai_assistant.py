@@ -139,38 +139,59 @@ def send_message_to_ai(user_message, profile):
                 "content": msg["content"]
             })
         
-        # Appel à l'API Groq
+        # Appel à l'API Groq avec gestion d'erreur améliorée
         with st.spinner("🤖 L'assistant réfléchit..."):
-            response = st.session_state.ai_client.chat.completions.create(
-                model="llama3-70b-8192",
-                messages=messages,
-                temperature=0.7,
-                max_tokens=2000
-            )
-        
-        # Récupération de la réponse
-        ai_response = response.choices[0].message.content
-        
-        # Ajout de la réponse à l'historique
-        timestamp = datetime.now().strftime("%H:%M")
-        st.session_state.ai_messages.append({
-            "role": "assistant",
-            "content": ai_response,
-            "timestamp": timestamp
-        })
-        
-        st.success("✅ Réponse reçue !")
+            try:
+                response = st.session_state.ai_client.chat.completions.create(
+                    model="llama3-70b-8192",
+                    messages=messages,
+                    temperature=0.7,
+                    max_tokens=2000
+                )
+                
+                # Récupération de la réponse
+                ai_response = response.choices[0].message.content
+                
+                # Ajout de la réponse à l'historique
+                timestamp = datetime.now().strftime("%H:%M")
+                st.session_state.ai_messages.append({
+                    "role": "assistant",
+                    "content": ai_response,
+                    "timestamp": timestamp
+                })
+                
+                st.success("✅ Réponse reçue !")
+                
+            except groq.BadRequestError as e:
+                st.error(f"❌ Erreur de requête API : {str(e)}")
+                st.info("💡 Essayez de reformuler votre question ou utilisez un modèle différent.")
+                add_error_message_to_history()
+                
+            except groq.RateLimitError as e:
+                st.error("❌ Limite de taux dépassée. Veuillez patienter quelques instants.")
+                add_error_message_to_history()
+                
+            except groq.AuthenticationError as e:
+                st.error("❌ Erreur d'authentification. Vérifiez votre clé API.")
+                add_error_message_to_history()
+                
+            except Exception as e:
+                st.error(f"❌ Erreur inattendue : {str(e)}")
+                st.info("💡 Vérifiez votre connexion internet et réessayez.")
+                add_error_message_to_history()
         
     except Exception as e:
-        st.error(f"❌ Erreur lors de la communication avec l'IA : {str(e)}")
-        
-        # Ajout d'un message d'erreur à l'historique
-        timestamp = datetime.now().strftime("%H:%M")
-        st.session_state.ai_messages.append({
-            "role": "assistant",
-            "content": "Désolé, j'ai rencontré une erreur technique. Veuillez réessayer.",
-            "timestamp": timestamp
-        })
+        st.error(f"❌ Erreur lors de l'initialisation : {str(e)}")
+        add_error_message_to_history()
+
+def add_error_message_to_history():
+    """Ajoute un message d'erreur à l'historique"""
+    timestamp = datetime.now().strftime("%H:%M")
+    st.session_state.ai_messages.append({
+        "role": "assistant",
+        "content": "Désolé, j'ai rencontré une erreur technique. Veuillez réessayer ou contactez le support si le problème persiste.",
+        "timestamp": timestamp
+    })
 
 def build_ai_context(profile):
     """Construit le contexte pour l'IA basé sur le profil de voyage"""
@@ -266,8 +287,7 @@ def display_quick_suggestions(profile):
     for i, suggestion in enumerate(suggestions):
         with cols[i % 3]:
             if st.button(suggestion, key=f"suggestion_{i}", use_container_width=True):
-                # Simulation de l'envoi du message
-                st.session_state.user_input = suggestion
+                # Envoi direct du message sans modifier le widget
                 send_message_to_ai(suggestion, profile)
                 st.rerun()
 
